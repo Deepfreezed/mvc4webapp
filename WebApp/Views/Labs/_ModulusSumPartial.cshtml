@@ -1,0 +1,30 @@
+﻿@model WebApp.Models.LabModels
+
+@if(Model != null && Model.ModulusSum > 0)
+{
+	List<string> digits = Model.UserID.Select(digit => digit.ToString()).ToList();
+	int numOfDigits = digits.Count;
+	int count = 0;
+	
+	<section class="social" id="socialLoginForm">
+		<h2>Here is the solution</h2>
+		
+		@foreach(string num in digits)
+		{
+			count++;
+	  
+			if(count < numOfDigits)
+			{ 
+				@String.Format("{0} + ", num)
+			}
+			else
+			{ 
+				@String.Format("{0} = {1}", num, Model.DigitSum)
+			}
+		}
+		
+		<br />
+		<br />
+		Modulus Result: @Model.ModulusSum (@Model.DigitSum % 100)
+	</section>
+}

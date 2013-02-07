@@ -1,0 +1,40 @@
+﻿@model WebApp.Models.LabModels
+
+@{
+	ViewBag.Title = "Lab3 - AJAX & Java Script";
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+<section id="loginForm">
+@using(Html.BeginForm())
+{
+	@Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+	<fieldset>
+        <legend>User Name and User ID</legend>
+        <ol>
+            <li>
+                @Html.LabelFor(m => m.UserName)
+                @Html.TextBoxFor(m => m.UserName)
+                @Html.ValidationMessageFor(m => m.UserName)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.UserID)
+                @Html.TextBoxFor(m => m.UserID)
+                @Html.ValidationMessageFor(m => m.UserID)
+            </li>            
+        </ol>
+        <input type="submit" value="Calculate Modulus" />
+    </fieldset>
+}
+</section>
+
+@Html.Partial("_ModulusSumPartial", Model)
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
