@@ -21,9 +21,16 @@ namespace WebApp.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Lab3(LabModels model)
 		{
-			
+			if(string.IsNullOrEmpty(model.UserID) && string.IsNullOrEmpty(model.UserName))
+			{
+				return View();
+			}
+			else
+			{
+				return View(model);
+			}
 
-			return View(model);
+			
 			//return PartialView("_ModulusSumPartial", model);
 		}
     }

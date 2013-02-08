@@ -22,7 +22,14 @@ namespace WebApp.Models
 		{ 
 			get
 			{
-				return DigitSum % 100;
+				if(!string.IsNullOrEmpty(UserID))
+				{
+					return DigitSum % 100;
+				}
+				else
+				{
+					return 0;
+				}				 
 			}
 		}
 
@@ -30,7 +37,14 @@ namespace WebApp.Models
 		{
 			get
 			{
-				return UserID.Sum(c => c - '0');
+				if(!string.IsNullOrEmpty(UserID))
+				{
+					return UserID.Sum(c => c - '0');
+				}
+				else
+				{
+					return 0;
+				}				
 			}
 		}
 	}
