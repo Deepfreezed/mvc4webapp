@@ -4,6 +4,11 @@
 	ViewBag.Title = "Lab3 - AJAX & Java Script";
 }
 
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+	@Scripts.Render("~/bundles/custom")
+}
+
 <hgroup class="title">
     <h1>@ViewBag.Title</h1>
 </hgroup>
@@ -35,7 +40,3 @@
 
 @Html.Partial("_ModulusSumPartial", Model)
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-	@Scripts.Render("~/bundles/custom")
-}
