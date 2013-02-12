@@ -1,6 +1,6 @@
 ﻿body {margin-top: 0px;margin-left: 0px;}
 
-#page_1 {position:relative; overflow: hidden;margin: 96px 0px 107px 88px;padding: 0px;border: none;width: 728px;}
+#page_1 {position:relative; overflow: hidden;padding: 0px;border: none;width: 728px;}
 
 #page_1 #dimg1 {position:absolute;top:0px;left:0px;z-index:-1;width:632px;height:33px;}
 #page_1 #dimg1 #img1 {width:632px;height:33px;}

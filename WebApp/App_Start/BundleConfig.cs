@@ -43,6 +43,8 @@ namespace WebApp
 						"~/Content/themes/base/jquery.ui.theme.css"));
 
 			bundles.Add(new StyleBundle("~/academichonesty/css").Include("~/Content/academichonesty/academichonesty.css"));
+
+			bundles.Add(new StyleBundle("~/studentconductprocess/css").Include("~/Content/studentconductprocess/studentconductprocess.css"));			
 		}
 	}
 }

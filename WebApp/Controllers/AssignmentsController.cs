@@ -16,5 +16,20 @@ namespace WebApp.Controllers
             return View();
         }
 
+		//
+		// GET: /Assignments/AcademicHonestyPolicy
+
+		public ActionResult AcademicHonestyPolicy()
+		{
+			return View();
+		}
+
+		//
+		// GET: /Assignments/StudentConductProcess
+
+		public ActionResult StudentConductProcess()
+		{
+			return View();
+		}
     }
 }

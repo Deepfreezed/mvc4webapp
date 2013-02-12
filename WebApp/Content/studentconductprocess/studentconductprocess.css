@@ -1,0 +1,9 @@
+﻿#text-content-block { background-color: White; padding: 5px; }
+
+#list-bullet {}
+#list-bullet ul { }
+#list-bullet ul li { padding:0 0 10px 0; }
+
+#list-lower-alpha {}
+#list-lower-alpha ol { list-style-type:lower-alpha; }
+#list-lower-alpha ol li { padding:0 0 10px 0; }

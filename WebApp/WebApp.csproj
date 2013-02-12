@@ -133,6 +133,15 @@
   <ItemGroup>
     <Content Include="Content\academichonesty\academichonesty.css" />
     <Content Include="Content\academichonesty\images\academichonesty1x1.jpg" />
+    <Content Include="Content\studentconductprocess\images\2012-2013_ssr_a10x1.jpg" />
+    <Content Include="Content\studentconductprocess\images\2012-2013_ssr_a1x1.jpg" />
+    <Content Include="Content\studentconductprocess\images\2012-2013_ssr_a2x1.jpg" />
+    <Content Include="Content\studentconductprocess\images\2012-2013_ssr_a4x1.jpg" />
+    <Content Include="Content\studentconductprocess\images\2012-2013_ssr_a5x1.jpg" />
+    <Content Include="Content\studentconductprocess\images\2012-2013_ssr_a6x1.jpg" />
+    <Content Include="Content\studentconductprocess\images\2012-2013_ssr_a7x1.jpg" />
+    <Content Include="Content\studentconductprocess\images\2012-2013_ssr_a9x1.jpg" />
+    <Content Include="Content\studentconductprocess\studentconductprocess.css" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -246,6 +255,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\jquery-1.9.1.min.map" />
+    <Content Include="Views\Assignments\AcademicHonestyPolicy.cshtml" />
+    <Content Include="Views\Assignments\StudentConductProcess.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
