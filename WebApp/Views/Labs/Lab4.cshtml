@@ -1,0 +1,48 @@
+﻿@model WebApp.Models.Lab4Model
+
+@{
+	ViewBag.Title = "Lab4 – Server Side";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+<section id="loginForm">
+	@using(Html.BeginForm())
+	{
+		@Html.AntiForgeryToken()
+		@Html.ValidationSummary(true)
+		        
+        <table>
+            <tr>
+                <td  colspan="4">
+                    @Html.ValidationMessageFor(m => m.CalculatedValue)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">                    
+                    @Html.TextBoxFor(m => m.CalculatedValue)
+                </td>
+            </tr>        
+            <tr>
+                <td><input type="submit" name="add" id="add" value="+" style="width:60px;" /></td>
+                <td><input type="submit" name="subtract" id="subtract" value="-" style="width:60px;" /></td>
+                <td><input type="submit" name="multiply" id="multiply" value="X" style="width:60px;" /></td>
+                <td><input type="submit" name="divide" id="divide" value="/" style="width:60px;" /></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td><input type="submit" name="clearmemory" id="clearmemory" value="C" class="cancel" style="width:60px;" /></td>
+                <td><input type="submit" name="execute" id="execute" value="=" style="width:60px;" /></td>
+            </tr>
+        </table>
+    }
+</section>
+
+@Html.Partial("_PrintingCalculatorPartial", Model)

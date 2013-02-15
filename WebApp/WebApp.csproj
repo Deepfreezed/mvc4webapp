@@ -127,6 +127,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Helpers.cs" />
+    <Compile Include="Models\Lab4Model.cs" />
     <Compile Include="Models\LabModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -257,6 +259,9 @@
     <None Include="Scripts\jquery-1.9.1.min.map" />
     <Content Include="Views\Assignments\AcademicHonestyPolicy.cshtml" />
     <Content Include="Views\Assignments\StudentConductProcess.cshtml" />
+    <Content Include="Views\Labs\LabMain.cshtml" />
+    <Content Include="Views\Labs\Lab4.cshtml" />
+    <Content Include="Views\Labs\_PrintingCalculatorPartial.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

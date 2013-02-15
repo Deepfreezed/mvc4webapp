@@ -1,0 +1,17 @@
+﻿@model WebApp.Models.Lab4Model
+
+@if(Model != null && Model.RunningCalculations.Count > 0)
+{	
+	<section class="social" id="socialLoginForm">
+		<h2>Running Total</h2>
+		
+		@foreach(string op in Model.RunningCalculations)
+        {
+            @op <br />
+        }
+		
+		<br />
+		<br />
+		Total: @Model.RunningTotal
+	</section>
+}
