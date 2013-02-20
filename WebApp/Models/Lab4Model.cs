@@ -50,7 +50,14 @@ namespace WebApp.Models
 		/// <value>
 		/// The running total.
 		/// </value>
-		public decimal RunningTotal { get; set; }
+		private decimal m_RunningTotal;
+
+		public decimal RunningTotal
+		{
+			get { return Math.Round(m_RunningTotal, 2); }
+			set { m_RunningTotal = value; }
+		}
+			
 
 		/// <summary>
 		/// Adds the specified value.
