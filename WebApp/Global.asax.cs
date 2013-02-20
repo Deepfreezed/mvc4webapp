@@ -26,11 +26,11 @@ namespace WebApp
 
 		protected void Session_Start(object sender, EventArgs e) 
 		{
-			HttpCookie cookie = new HttpCookie("ASP.NET_SessionId", Session.SessionID.ToString()); 
-			cookie.Expires = DateTime.Now.AddMinutes(20); 
-			cookie.Domain = "*.janithtest.com"; 
-			cookie.HttpOnly = true; 
-			Response.SetCookie(cookie); 
+			//HttpCookie cookie = new HttpCookie("ASP.NET_SessionId", Session.SessionID.ToString()); 
+			//cookie.Expires = DateTime.Now.AddMinutes(20); 
+			//cookie.Domain = "*.janithtest.com"; 
+			//cookie.HttpOnly = true; 
+			//Response.SetCookie(cookie); 
 		}
 	}
 }
