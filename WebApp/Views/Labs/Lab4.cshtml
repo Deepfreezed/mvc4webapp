@@ -6,6 +6,7 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/custom/lab4")
 }
 
 <hgroup class="title">
@@ -26,7 +27,7 @@
             </tr>
             <tr>
                 <td colspan="4">                    
-                    @Html.TextBoxFor(m => m.CalculatedValue)
+                    @Html.TextBoxFor(m => m.CalculatedValue, new { @autocomplete = "off" })
                 </td>
             </tr>        
             <tr>
@@ -39,7 +40,7 @@
                 <td></td>
                 <td></td>
                 <td><input type="submit" name="clearmemory" id="clearmemory" value="C" class="cancel" style="width:60px;" /></td>
-                <td><input type="submit" name="execute" id="execute" value="=" style="width:60px;" /></td>
+                <td><input type="submit" name="execute" id="execute" value="=" class="cancel" style="width:60px;" /></td>
             </tr>
         </table>
     }

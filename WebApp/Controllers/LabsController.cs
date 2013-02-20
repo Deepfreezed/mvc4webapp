@@ -38,13 +38,14 @@ namespace WebApp.Controllers
 		// POST: /Labs/Lab4
 		public ActionResult Lab4()
 		{
-			return View();
+			Lab4Model lab4Model = Lab4Model.RetrieveFromSession();
+			return View(lab4Model);
 		}
 
 		[HttpPost]
 		[AllowAnonymous]
 		[ValidateAntiForgeryToken]
-		public ActionResult Lab4(string add, string subtract, string multiply, string divide, Lab4Model model)
+		public ActionResult Lab4(string add, string subtract, string multiply, string divide, string clearmemory, string execute, Lab4Model model)
 		{
 			int value = 0;
 			Lab4Model lab4Model = Lab4Model.RetrieveFromSession();
@@ -70,31 +71,22 @@ namespace WebApp.Controllers
 			}
 			else
 			{
-				
-				
-			}		
+				ModelState.Clear();
+
+				if(!string.IsNullOrEmpty(clearmemory))
+				{
+					lab4Model.ClearMemory();
+				}
+				else if(!string.IsNullOrEmpty(execute))
+				{
+					lab4Model.Execute();
+				}				
+			}
+
+			ModelState.Remove("CalculatedValue");
+			lab4Model = Lab4Model.RetrieveFromSession();
 
 			return View(lab4Model);
 		}
-
-		//[HttpPost]
-		//[AllowAnonymous]
-		//[ValidateAntiForgeryToken]
-		//[ValidateInput(false)]
-		//public ActionResult Lab4(string clearmemory, string execute)
-		//{
-		//    Lab4Model lab4Model = Lab4Model.RetrieveFromSession();
-
-		//    if(!string.IsNullOrEmpty(clearmemory))
-		//    {
-		//        lab4Model.ClearMemory();
-		//    }
-		//    else if(!string.IsNullOrEmpty(execute))
-		//    {
-		//        lab4Model.Execute();
-		//    }
-
-		//    return View(lab4Model);
-		//}
     }
 }

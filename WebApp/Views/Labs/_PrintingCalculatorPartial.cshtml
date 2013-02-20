@@ -3,15 +3,25 @@
 @if(Model != null && Model.RunningCalculations.Count > 0)
 {	
 	<section class="social" id="socialLoginForm">
-		<h2>Running Total</h2>
-		
+		Session will expire at: @Model.SessionTimeOut
+        <h2>Running Total</h2>
+        <table>        
 		@foreach(string op in Model.RunningCalculations)
         {
-            @op <br />
+            <tr>
+                <td style="width: 100px; text-align:right;">@op</td>
+            </tr>
         }
-		
-		<br />
-		<br />
-		Total: @Model.RunningTotal
+        @if (!string.IsNullOrEmpty(Request.Params["execute"]) && Request.Params["execute"] == "=")
+        {
+            <tr>
+                <td style="width: 100px; text-align:right;">
+                    <span>------------</span><br />
+                    @Model.RunningTotal<br />
+                    <span>------------</span><br />
+                </td>
+            </tr>
+        }
+        </table>	
 	</section>
 }

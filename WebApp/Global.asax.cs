@@ -23,5 +23,14 @@ namespace WebApp
 			RouteConfig.RegisterRoutes(RouteTable.Routes);
 			BundleConfig.RegisterBundles(BundleTable.Bundles);
 		}
+
+		protected void Session_Start(object sender, EventArgs e) 
+		{
+			HttpCookie cookie = new HttpCookie("ASP.NET_SessionId", Session.SessionID.ToString()); 
+			cookie.Expires = DateTime.Now.AddMinutes(20); 
+			cookie.Domain = "*.janithtest.com"; 
+			cookie.HttpOnly = true; 
+			Response.SetCookie(cookie); 
+		}
 	}
 }

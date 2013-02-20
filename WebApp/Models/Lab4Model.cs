@@ -13,7 +13,7 @@ namespace WebApp.Models
 
 		public Lab4Model()
 		{
-			RunningCalculations = new Queue<string>(20);
+			RunningCalculations = new LimitedQueue<string>(20);
 			RunningTotal = 0;
 		}
 
@@ -28,13 +28,21 @@ namespace WebApp.Models
 		[RegularExpression(@"[0-9]+", ErrorMessage = "{0} must be a Number.")]
 		public string CalculatedValue { get; set; }
 
+		public string SessionTimeOut
+		{
+			get
+			{
+				return HttpContext.Current.Session.GetSessionTimeOut(SessionKey);
+			}			
+		}
+
 		/// <summary>
 		/// Gets or sets the running calculations.
 		/// </summary>
 		/// <value>
 		/// The running calculations.
 		/// </value>
-		public Queue<string> RunningCalculations { get; set; }
+		public LimitedQueue<string> RunningCalculations { get; set; }
 
 		/// <summary>
 		/// Gets or sets the running total.
@@ -101,7 +109,7 @@ namespace WebApp.Models
 		/// </summary>
 		public void Execute()
 		{
-			throw new NotImplementedException();
+			
 		}
 
 		/// <summary>
@@ -151,6 +159,32 @@ namespace WebApp.Models
 		public static void ClearFromSession()
 		{
 			HttpContext.Current.Session.Remove(SessionKey);
+		}
+	}
+
+	public class LimitedQueue<T> : Queue<T>
+	{
+		private int limit = -1;
+
+		public int Limit
+		{
+			get { return limit; }
+			set { limit = value; }
+		}
+
+		public LimitedQueue(int limit)
+			: base(limit)
+		{
+			this.Limit = limit;
+		}
+
+		public new void Enqueue(T item)
+		{
+			if(this.Count >= this.Limit)
+			{
+				this.Dequeue();
+			}
+			base.Enqueue(item);
 		}
 	}
 }
