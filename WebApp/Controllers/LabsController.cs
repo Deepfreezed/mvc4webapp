@@ -4,11 +4,21 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
+using WebApp.Helpers;
+using WebApp.ViewModels;
+using Omu.ValueInjecter;
 
 namespace WebApp.Controllers
 {
-    public class LabsController : Controller
+	public class LabsController : RavenController
     {
+		//
+		// POST: /Labs/LabMain
+		public ActionResult LabMain()
+		{
+			return View();
+		}
+
 		//
 		// POST: /Labs/Lab3
 		public ActionResult Lab3()
@@ -38,36 +48,45 @@ namespace WebApp.Controllers
 		// POST: /Labs/Lab4
 		public ActionResult Lab4()
 		{
-			Lab4Model lab4Model = Lab4Model.RetrieveFromSession();
-			return View(lab4Model);
+			Lab4DataAccess dataAccess = new Lab4DataAccess(RavenSession);
+			PrintingCalculator item = dataAccess.RetrieveFromSession();
+			Lab4ViewModel model = new Lab4ViewModel();
+			model.InjectFrom(item);
+			
+			return View("Lab4", model);
 		}
-
+		
 		[HttpPost]
 		[AllowAnonymous]
 		[ValidateAntiForgeryToken]
-		public ActionResult Lab4(string add, string subtract, string multiply, string divide, string clearmemory, string execute, Lab4Model model)
-		{
+		public ActionResult Lab4(string add, string subtract, string multiply, string divide, string clearmemory, string execute, Lab4ViewModel model)
+		{			
 			int value = 0;
-			Lab4Model lab4Model = Lab4Model.RetrieveFromSession();
-
+			Lab4DataAccess dataAccess = new Lab4DataAccess(RavenSession);
+			PrintingCalculator item = dataAccess.RetrieveFromSession();
+			
 			if(!string.IsNullOrEmpty(model.CalculatedValue) && int.TryParse(model.CalculatedValue, out value))
 			{
 				if(!string.IsNullOrEmpty(add))
 				{
-					lab4Model.Add(value);
+					item.Add(value);
 				}
 				else if(!string.IsNullOrEmpty(subtract))
 				{
-					lab4Model.Subtract(value);
+					item.Subtract(value);
 				}
 				else if(!string.IsNullOrEmpty(multiply))
 				{
-					lab4Model.Multiply(value);
+					item.Multiply(value);
 				}
 				else if(!string.IsNullOrEmpty(divide))
 				{
-					lab4Model.Divide(value);
+					item.Divide(value);
 				}
+
+				//Save to store
+				RavenSession.Store(item);
+				RavenSession.SaveChanges();
 			}
 			else
 			{
@@ -75,18 +94,19 @@ namespace WebApp.Controllers
 
 				if(!string.IsNullOrEmpty(clearmemory))
 				{
-					lab4Model.ClearMemory();
+					dataAccess.ClearFromSession();
 				}
-				else if(!string.IsNullOrEmpty(execute))
-				{
-					lab4Model.Execute();
-				}				
+				//else if(!string.IsNullOrEmpty(execute))
+				//{
+				//    lab4Model.Execute();
+				//}				
 			}
 
 			ModelState.Remove("CalculatedValue");
-			lab4Model = Lab4Model.RetrieveFromSession();
+			model.CalculatedValue = string.Empty;
 
-			return View(lab4Model);
+			model.InjectFrom(item);
+			return View(model);
 		}
     }
 }

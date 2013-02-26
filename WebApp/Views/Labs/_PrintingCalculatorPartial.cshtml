@@ -1,6 +1,6 @@
-﻿@model WebApp.Models.Lab4Model
+﻿@model WebApp.ViewModels.Lab4ViewModel
 
-@if(Model != null && Model.RunningCalculations.Count > 0)
+@if(Model != null && Model.RunningCalculations != null && Model.RunningCalculations.Count > 0)
 {	
 	<section class="social" id="socialLoginForm">
 		Session will expire at: @Model.SessionTimeOut
