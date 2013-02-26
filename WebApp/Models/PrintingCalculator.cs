@@ -18,6 +18,7 @@ namespace WebApp.Models
 
 		public int ID { get; set; }
 		public LimitedQueue<string> RunningCalculations { get; set; }
+		public string SessionTimeOut { get; set; }
 
 		public decimal RunningTotal
 		{

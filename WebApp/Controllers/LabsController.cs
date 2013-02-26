@@ -51,8 +51,12 @@ namespace WebApp.Controllers
 			Lab4DataAccess dataAccess = new Lab4DataAccess(RavenSession);
 			PrintingCalculator item = dataAccess.RetrieveFromSession();
 			Lab4ViewModel model = new Lab4ViewModel();
-			model.InjectFrom(item);
-			
+
+			if(item != null)
+			{
+				model.InjectFrom(item);
+			}
+
 			return View("Lab4", model);
 		}
 		
@@ -87,6 +91,9 @@ namespace WebApp.Controllers
 				//Save to store
 				RavenSession.Store(item);
 				RavenSession.SaveChanges();
+
+				//Map changes to model
+				model.InjectFrom(item);
 			}
 			else
 			{
@@ -95,17 +102,19 @@ namespace WebApp.Controllers
 				if(!string.IsNullOrEmpty(clearmemory))
 				{
 					dataAccess.ClearFromSession();
+
+					//Clear Model
+					model = new Lab4ViewModel();
 				}
 				//else if(!string.IsNullOrEmpty(execute))
 				//{
 				//    lab4Model.Execute();
-				//}				
+				//}
 			}
 
 			ModelState.Remove("CalculatedValue");
 			model.CalculatedValue = string.Empty;
 
-			model.InjectFrom(item);
 			return View(model);
 		}
     }

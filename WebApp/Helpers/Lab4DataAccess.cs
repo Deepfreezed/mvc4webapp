@@ -41,17 +41,6 @@ namespace WebApp.Helpers
 		}
 
 		/// <summary>
-		/// Gets the session time out.
-		/// </summary>
-		public string SessionTimeOut
-		{
-			get
-			{
-				return null;
-			}
-		}
-
-		/// <summary>
 		/// Retrieve from session.
 		/// </summary>
 		/// <returns></returns>
@@ -63,26 +52,24 @@ namespace WebApp.Helpers
 			if(!string.IsNullOrEmpty(UserID))
 			{
 				item = m_RavenSession.Load<PrintingCalculator>(UserID);
+
+				if(item == null || item.ID < 0)
+				{
+					//initialize a link list with max 20 operations
+					item = new PrintingCalculator();
+
+					CreateSessions(item);
+				}
 			}
 			else
-			{
-				DateTime SessionExpiration = DateTime.UtcNow.AddMinutes(SessionTimeOutValue);
-
+			{			
 				//initialize a link list with max 20 operations
 				item = new PrintingCalculator();
 
-				m_RavenSession.Store(item);
-				m_RavenSession.Advanced.GetMetadataFor(item)["Raven-Expiration-Date"] = new RavenJValue(SessionExpiration);
-				m_RavenSession.SaveChanges();
-
-				//Save user ID cookie
-				HttpCookie authCookie = new HttpCookie(SessionKey, m_RavenSession.Advanced.GetDocumentId(item))
-				{
-					Expires = SessionExpiration
-				};
-
-				HttpContext.Current.Response.Cookies.Add(authCookie);
+				CreateSessions(item);				
 			}
+
+			item.SessionTimeOut = m_RavenSession.Advanced.GetMetadataFor(item)["Raven-Expiration-Date"].ToString();
 
 			return item;
 		}
@@ -111,6 +98,27 @@ namespace WebApp.Helpers
 			}
 
 			return msg;
+		}
+
+		/// <summary>
+		/// Creates the sessions.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		private void CreateSessions(PrintingCalculator item)
+		{
+			DateTime SessionExpiration = DateTime.UtcNow.AddMinutes(SessionTimeOutValue);
+
+			m_RavenSession.Store(item);
+			m_RavenSession.Advanced.GetMetadataFor(item)["Raven-Expiration-Date"] = new RavenJValue(SessionExpiration);
+			m_RavenSession.SaveChanges();
+
+			//Save user ID cookie
+			HttpCookie authCookie = new HttpCookie(SessionKey, m_RavenSession.Advanced.GetDocumentId(item))
+			{
+				Expires = SessionExpiration
+			};
+
+			HttpContext.Current.Response.Cookies.Add(authCookie);
 		}
 	}
 }

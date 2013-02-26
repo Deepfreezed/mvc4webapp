@@ -24,14 +24,7 @@ namespace WebApp.ViewModels
 		[RegularExpression(@"[0-9]+", ErrorMessage = "{0} must be a Number.")]
 		public string CalculatedValue { get; set; }
 
-		public string SessionTimeOut 
-		{ 
-			get
-			{
-				return "SessionTimeOut";
-			}
-		}
-
+		public string SessionTimeOut { get; set; } 
 		public LimitedQueue<string> RunningCalculations { get; set; }
 		public decimal RunningTotal { get; set; }
 
