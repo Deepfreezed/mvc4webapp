@@ -11,7 +11,7 @@ namespace WebApp.Helpers
 	public class Lab4DataAccess
 	{
 		private const string SessionKey = "Lab4ModelUserID";
-		private const int SessionTimeOutValue = 5;
+		private const int SessionTimeOutValue = 10;
 		private IDocumentSession m_RavenSession;
 
 		public Lab4DataAccess(IDocumentSession RavenSession)
@@ -92,8 +92,8 @@ namespace WebApp.Helpers
 		/// </summary>
 		public void ClearFromSession()
 		{
-
-			//HttpContext.Current.Session.Remove(SessionKey);
+			PrintingCalculator item = RetrieveFromSession();
+			m_RavenSession.Delete<PrintingCalculator>(item);
 		}
 
 		/// <summary>

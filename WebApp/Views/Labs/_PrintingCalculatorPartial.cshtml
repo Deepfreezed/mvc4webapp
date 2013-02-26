@@ -12,8 +12,11 @@
                 <td style="width: 100px; text-align:right;">@op</td>
             </tr>
         }
-        @if (!string.IsNullOrEmpty(Request.Params["execute"]) && Request.Params["execute"] == "=")
+        @*@if (!string.IsNullOrEmpty(Request.Params["execute"]) && Request.Params["execute"] == "=")
         {
+            
+        }*@
+
             <tr>
                 <td style="width: 100px; text-align:right;">
                     <span>------------</span><br />
@@ -21,7 +24,6 @@
                     <span>------------</span><br />
                 </td>
             </tr>
-        }
-        </table>	
+        </table>
 	</section>
 }
