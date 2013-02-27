@@ -1,9 +1,9 @@
 ﻿@model WebApp.ViewModels.Lab4ViewModel
 
-@if(Model != null && Model.RunningCalculations != null && Model.RunningCalculations.Count > 0)
-{	
-	<section class="social" id="socialLoginForm">
-		Session will expire at: @Model.SessionTimeOut
+<section class="social" id="socialLoginForm">
+    @if(Model != null && Model.RunningCalculations != null && Model.RunningCalculations.Count > 0)
+    {	
+		<span>Session will expire at: @Model.SessionTimeOut</span>
         <h2>Running Total</h2>
         <table>        
 		@foreach(string op in Model.RunningCalculations)
@@ -12,12 +12,6 @@
                 <td style="width: 100px; text-align:right;">@op</td>
             </tr>
         }
-        @if(!string.IsNullOrEmpty(Request.Params["clearmemory"]) && Request.Params["clearmemory"] == "C")
-        {
-            <span>Session Data Cleared</span>
-        }
-        else
-        {
             <tr>
                 <td style="width: 100px; text-align:right;">
                     <span>------------</span><br />
@@ -25,7 +19,11 @@
                     <span>------------</span><br />
                 </td>
             </tr>
-        }
-        </table>
-	</section>
-}
+        </table>	
+    }
+
+    @if(!string.IsNullOrEmpty(Request.Params["clearmemory"]) && Request.Params["clearmemory"] == "C")
+    {
+        <h2>Session Data Cleared</h2>
+    }
+</section>
