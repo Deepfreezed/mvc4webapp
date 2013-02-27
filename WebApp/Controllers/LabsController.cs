@@ -62,7 +62,7 @@ namespace WebApp.Controllers
 		
 		[HttpPost]
 		[AllowAnonymous]
-		[ValidateAntiForgeryToken]
+		//[ValidateAntiForgeryToken]
 		public ActionResult Lab4(string add, string subtract, string multiply, string divide, string clearmemory, string execute, Lab4ViewModel model)
 		{			
 			int value = 0;
@@ -94,26 +94,35 @@ namespace WebApp.Controllers
 
 				//Map changes to model
 				model.InjectFrom(item);
+
+				ModelState.Remove("CalculatedValue");
+				model.CalculatedValue = string.Empty;
 			}
 			else
 			{
-				ModelState.Clear();
-
 				if(!string.IsNullOrEmpty(clearmemory))
 				{
+					ModelState.Clear();
+					ModelState.Remove("CalculatedValue");
+					model.CalculatedValue = string.Empty;
+
 					dataAccess.ClearFromSession();
 
 					//Clear Model
 					model = new Lab4ViewModel();
 				}
-				//else if(!string.IsNullOrEmpty(execute))
-				//{
-				//    lab4Model.Execute();
-				//}
+				else if(!string.IsNullOrEmpty(execute))
+				{
+					ModelState.Clear();
+					ModelState.Remove("CalculatedValue");
+					model.CalculatedValue = string.Empty;
+				}
+				else
+				{
+					//Map changes to model
+					model.InjectFrom(item);
+				}
 			}
-
-			ModelState.Remove("CalculatedValue");
-			model.CalculatedValue = string.Empty;
 
 			return View(model);
 		}

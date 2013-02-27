@@ -25,7 +25,7 @@ namespace WebApp.Models
 		{
 			if(this.Count >= this.Limit)
 			{
-				this.RemoveAt(this.Limit - 1);
+				this.RemoveAt(0);
 			}
 			base.Add(item);
 		}
