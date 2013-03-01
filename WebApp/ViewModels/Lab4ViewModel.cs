@@ -27,7 +27,5 @@ namespace WebApp.ViewModels
 		public string SessionTimeOut { get; set; } 
 		public LimitedQueue<string> RunningCalculations { get; set; }
 		public decimal RunningTotal { get; set; }
-
-
 	}
 }

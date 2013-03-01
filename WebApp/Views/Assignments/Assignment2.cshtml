@@ -1,0 +1,113 @@
+﻿@model WebApp.ViewModels.Assignment2ViewModel
+
+@{
+    ViewBag.Title = "Add two two-digit numbers - with regrouping";
+}
+
+@section styles{
+	@Styles.Render("~/assignment2/css")
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/custom/assignment2")
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+<section>
+    @using(Html.BeginForm())
+    {
+		@Html.AntiForgeryToken()		
+        
+        if(Model != null && Model.Done)
+        { 
+            <div class="questionsdone">
+                <h2>Congratulations, your are done with this practice.</h2>                
+                <input type="submit" name="newpractise" id="newpractise" value="New Practise" class="cancel" />
+            </div>
+            <div class="scorecard">
+                @Html.Partial("_Assignment2Partial", Model)
+            </div>            
+        }
+        else if(Model != null && !string.IsNullOrEmpty(Model.Answer) && !Model.AnswereVerified && (Model.Answer != Model.Solution.ToString()))
+        {
+            <div class="answer-box">
+                <h2 class="feedback-header">Sorry, incorrect...</h2>
+                <h3 class="answer-header correct-answer-hd">The correct answer is: <span class="studentGuess">@Model.Solution</span></h3>               
+                <input type="submit" name="answereverified" id="answereverified" value="Got it" />
+            </div>
+            <h2 class="feedback-header">Explanation</h2>
+            <div class="tab-box">
+                <p style="padding-left:20px; padding-top:20px; font-size:medium; font-weight:bold;">Add.</p>
+                <p style="padding-left:40px; padding-bottom:20px; font-size:medium; font-weight:bold;">@Model.FirstNumber <span>+</span> @Model.SecondNumber <span>= </span><input style="width: 33px;" disabled="disabled" id="fiFillIn0" class="fillIn" type="text"></p>
+                <h3 class="answer-header correct-answer-hd" style="padding-left:20px; padding-bottom:20px;">You answered: <span style="color:Red; font-size:medium;">@Model.Answer</span></h3>
+            </div>
+            <br />
+            <div class="tab-box">
+                @if(Model.FirstNumber > Model.SecondNumber)
+                { 
+                    <p style="padding:20px 20px 0 20px; font-weight:bold;"><span>You can count up to add. It is easier to start with the larger number. Start from <span style="color:Green">@Model.FirstNumber</span> and count up <span style="color:Olive">@Model.SecondNumber</span>:</span></p>
+                    
+                    <p style="padding:5px 20px 0 40px; font-weight:bold;">
+                        @for(int i = Model.FirstNumber; i <= Model.FirstNumber + Model.SecondNumber; i++)
+                        {
+                            <span>@i ,</span>
+                        }
+                    </p>
+                }
+                else
+                {
+                    <p style="padding:20px 20px 0 20px; font-weight:bold;"><span>You can count up to add. It is easier to start with the larger number. Start from <span style="color:Green">@Model.SecondNumber</span> and count up <span style="color:Olive">@Model.FirstNumber</span>:</span></p>
+                                        
+                    <p style="padding:5px 20px 0 40px; font-weight:bold;">
+                        @for(int i = Model.SecondNumber; i <= Model.FirstNumber + Model.SecondNumber; i++)
+                        {
+                            <span>@i ,</span>
+                        }
+                    </p>
+                }
+                <p style="padding-left:40px; padding-bottom:20px; padding-top:20px; font-weight:bold;">@Model.FirstNumber <span>+</span> @Model.SecondNumber <span>= @Model.Solution</span></p>                
+            </div>            
+        }
+        else if(Model != null)
+        {           
+            <div class="questions">
+                <div class="errorsummary">
+                    @Html.ValidationSummary(true)
+                    @Html.ValidationMessageFor(m => m.Answer)
+                </div>       
+                <table>                
+                    <tr>
+                        <td colspan="2">
+                            <span class="digits1">@Model.FirstNumber</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="operand">+</span>
+                        </td>
+                        <td>
+                            <span class="digits2">@Model.SecondNumber</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">                    
+                            @Html.TextBoxFor(m => m.Answer, new { @autocomplete = "off", @style = "width:75px; height:50px; text-align:right; padding:0 10px 0 0; font-size:42px; font-weight:bold; color:Green;" })
+                        </td>
+                    </tr>        
+                    <tr>               
+                        <td colspan="2" align="right"><input type="submit" name="submitanswer" id="submitanswer" value="Next Question" style="font-size:26px;" /></td>                        
+                    </tr>
+                </table>
+            </div>
+            <div class="scorecard">
+                @Html.Partial("_Assignment2Partial", Model)
+            </div>
+        }
+    }
+</section>
+
+

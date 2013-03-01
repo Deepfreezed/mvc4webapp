@@ -1,0 +1,139 @@
+﻿.questions {
+	float: left;
+	width: 60%;
+	text-align:right;
+	padding: 0 0 0 100px;
+}
+
+questionsdone
+{
+	float: left;
+	width: 60%;
+	text-align:right;
+}
+
+.questions span {	
+	padding:0 10px 0 0;
+}
+
+.questions p {
+	font-weight:bold;
+}
+
+.questions p span{
+	font-size:medium;
+}
+
+.answer-box
+{
+  padding-top: 5px;
+  padding-right: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+}
+
+.answer-header
+{
+  font-size: 16px;
+  color: #719b07;
+  margin-top: 10px;
+  margin-right: 0px;
+  margin-bottom: 10px;
+  margin-left: 0px;
+}
+
+.feedback-header
+{
+  font-size: 24px;
+  color: #719b07;
+  margin-top: 0px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+
+#answereverified
+{
+	padding-top: 10px;
+	display: block;
+}
+
+.studentGuess
+{
+	font-size: large;
+	color:Blue;
+}
+
+.tab-box
+{		
+	-moz-box-shadow: 0 0 5px 5px #888;
+	-webkit-box-shadow: 0 0 5px 5px#888;
+	box-shadow: 0 0 5px 5px #888;
+}
+
+.scorecard div
+{	
+	float: right;
+}
+
+.errorsummary
+{
+	text-align:left;
+}
+
+.digits1
+{	
+	font-size:42px;
+	font-weight:bold;
+	color:Purple;
+}
+
+.digits2
+{
+	font-size:42px;
+	font-weight:bold;
+	color:Maroon;
+}
+
+.operand
+{
+	font-size:42px;
+	font-weight:bold;
+	color:Red; 
+}
+
+.scorecard h2
+{
+	color:Green;
+}
+
+.scorecard p
+{
+	font-weight:bold;
+	vertical-align:middle;
+}
+
+.scorecard span
+{
+	font-size:24px;
+}
+
+.attempted
+{
+	color:Purple;
+}
+
+.correct
+{
+	color:Orange;
+}
+
+.rating
+{
+	color:Blue;
+}
+
+div.growlUI { background: url(/Content/assignment2/images/check48.png) no-repeat 10px 10px; height:100px; }
+div.growlUI h1, div.growlUI h2 {
+    color: white; padding: 5px 5px 5px 75px; text-align: left
+}

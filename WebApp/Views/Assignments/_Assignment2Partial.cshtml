@@ -1,0 +1,19 @@
+﻿@model WebApp.ViewModels.Assignment2ViewModel
+
+<section>    
+    @if(Model != null && Model.ProblemsAnswered > 0)
+    {
+		<h2>Your Score</h2>
+        <p>Problems Attempted: <span class="attempted">@Model.ProblemsAnswered</span></p>
+        <p>Problems Correct: <span class="correct">@Model.ProblemsCorrect</span></p>
+        <p>Your Rating: <span class="rating">@Model.Rating</span></p>
+        
+        if(!string.IsNullOrEmpty(@Model.RatingMessage))
+        { 
+            <div id="growlUI" class="growlUI" style="display:none">
+                <h2>@Model.RatingMessage</h2>
+            </div>
+        }
+        
+    }
+</section>

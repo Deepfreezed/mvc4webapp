@@ -124,7 +124,7 @@ namespace WebApp.Controllers
 				}
 			}
 
-			return View(model);
+			return View("Lab4", model);
 		}
     }
 }

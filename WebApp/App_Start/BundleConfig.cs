@@ -21,6 +21,10 @@ namespace WebApp
 			bundles.Add(new ScriptBundle("~/bundles/custom/lab4").Include(
 						"~/Scripts/custom/lab4-functions.js"));
 
+			bundles.Add(new ScriptBundle("~/bundles/custom/assignment2").Include(
+						"~/Scripts/jquery.blockUI.js",
+						"~/Scripts/custom/assignment2-functions.js"));
+			
 			// Use the development version of Modernizr to develop with and learn from. Then, when you're
 			// ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
 			bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
@@ -44,7 +48,9 @@ namespace WebApp
 
 			bundles.Add(new StyleBundle("~/academichonesty/css").Include("~/Content/academichonesty/academichonesty.css"));
 
-			bundles.Add(new StyleBundle("~/studentconductprocess/css").Include("~/Content/studentconductprocess/studentconductprocess.css"));			
+			bundles.Add(new StyleBundle("~/studentconductprocess/css").Include("~/Content/studentconductprocess/studentconductprocess.css"));
+
+			bundles.Add(new StyleBundle("~/assignment2/css").Include("~/Content/assignment2/assignment2.css"));
 		}
 	}
 }
