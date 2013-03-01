@@ -77,43 +77,42 @@ namespace WebApp.Models.Assignment2
 			{
 				string rating = string.Empty;
 
-				switch(ProblemsWrong)
+				if(ProblemsAnswered > 0)
 				{
-					case 0:
-						rating = "A+";
-						break;
-					case 1:
+					decimal ratingPercent = (Convert.ToDecimal(ProblemsCorrect) / Convert.ToDecimal(ProblemsAnswered)) * 100;
+
+					if(ratingPercent > 95)
+					{
 						rating = "A";
-						break;
-					case 2:
+					}
+					else if(ratingPercent > 85)
+					{
 						rating = "B+";
-						break;
-					case 3:
+					}
+					else if(ratingPercent > 80)
+					{
 						rating = "B";
-						break;
-					case 4:
+					}
+					else if(ratingPercent > 70)
+					{
 						rating = "C+";
-						break;
-					case 5:
+					}
+					else if(ratingPercent > 60)
+					{
 						rating = "C";
-						break;
-					case 6:
+					}
+					else if(ratingPercent > 50)
+					{
 						rating = "D+";
-						break;
-					case 7:
+					}
+					else if(ratingPercent > 40)
+					{
 						rating = "D";
-						break;
-					case 8:
-						rating = "D-";
-						break;
-					case 9:
-						rating = "D";
-						break;
-					case 10:
+					}
+					else
+					{
 						rating = "F";
-						break;
-					default:
-						break;
+					}
 				}
 
 				return rating;

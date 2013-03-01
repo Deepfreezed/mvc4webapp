@@ -1,4 +1,10 @@
 ﻿$(document).ready(function () {
+	if ($('#Answer').length) {
+		$('#Answer').focus();
+	}
+});
+
+$(document).ready(function () {
 	if ($('#growlUI').length) {
 		$.blockUI({
 			message: $('div.growlUI'),
