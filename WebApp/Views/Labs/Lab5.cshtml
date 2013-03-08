@@ -1,0 +1,72 @@
+﻿@model WebApp.ViewModels.Lab5ViewModel
+@{
+    ViewBag.Title = "Lab5 – Pulling Stock Data";
+}
+
+@section styles{
+	@Styles.Render("~/lab5/css")
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/custom/lab5")
+}
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+<section>
+	@using(Html.BeginForm("Lab5", "Labs", FormMethod.Post, new { Id = "Lab5Form" }))
+    {
+		@Html.AntiForgeryToken()
+		@Html.ValidationSummary(true)
+		        
+        <table style="margin-left:auto; margin-right:auto;">
+            <tr>
+                <td>                    
+                    <h3>Search Stock Symbol</h3>
+                    <br />
+                    @Html.ValidationMessageFor(m => m.StockSymbol) 
+                </td>
+            </tr>
+            <tr>
+                <td>                    
+                    @Html.TextBoxFor(m => m.StockSymbol, new { @style = "width:150px;" })
+                    <input type="submit" name="StockSearch" id="StockSearch" value="Get Quote" style="margin-left:20px;" />
+                </td>
+            </tr>           
+            <tr>
+                <td>
+                    @if(Model != null && !string.IsNullOrEmpty(Model.StockSummary))
+                    { 
+                        @Html.Raw(Model.StockSummary)
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @if(Model != null && !string.IsNullOrEmpty(Model.StockChart))
+                    { 
+                        <img style="margin-top:10px; margin-left:-2px;" src="@Model.StockChart" alt="Chart forYahoo! Inc. (YHOO)" border="0" height="250" width="500">
+                    }
+                </td>
+            </tr>
+             <tr>
+                <td>                    
+                    <div style="float:left; text-align:left;">
+                        <span style="font-weight:bold;">Refresh:</span>
+                        <select id="RefreshInterval" name="RefreshInterval" style="font-weight:bold; color:Green;">                        
+                            <option value="1">1 min</option>
+                            <option value="3">3 min</option>
+                            <option value="5">5 min</option>
+                            <option value="15">15 min</option>
+                            <option value="60">1 hrs</option>
+                            <option value="120">2 hrs</option>
+                        </select>
+                        <p>Last updated: <span style="font-weight:bold;">@Model.LastUpdated.ToString("yyyy/MM/dd HH:mm:ss")</span></p>
+                        <input type="hidden" id="RefreshIntervalValue" name="RefreshIntervalValue" value="@Model.RefreshInterval">
+                    </div>
+                </td>
+            </tr>
+        </table>
+    }  
+</section>

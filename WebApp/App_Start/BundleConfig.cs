@@ -21,6 +21,9 @@ namespace WebApp
 			bundles.Add(new ScriptBundle("~/bundles/custom/lab4").Include(
 						"~/Scripts/custom/lab4-functions.js"));
 
+			bundles.Add(new ScriptBundle("~/bundles/custom/lab5").Include(
+						"~/Scripts/custom/lab5-functions.js"));
+
 			bundles.Add(new ScriptBundle("~/bundles/custom/assignment2").Include(
 						"~/Scripts/jquery.blockUI.js",
 						"~/Scripts/custom/assignment2-functions.js"));
@@ -51,6 +54,8 @@ namespace WebApp
 			bundles.Add(new StyleBundle("~/studentconductprocess/css").Include("~/Content/studentconductprocess/studentconductprocess.css"));
 
 			bundles.Add(new StyleBundle("~/assignment2/css").Include("~/Content/assignment2/assignment2.css"));
+
+			bundles.Add(new StyleBundle("~/lab5/css").Include("~/Content/lab5/lab5.css"));
 		}
 	}
 }

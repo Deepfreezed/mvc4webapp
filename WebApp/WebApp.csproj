@@ -151,6 +151,7 @@
     <Compile Include="Helpers\DocumentStoreHolder.cs" />
     <Compile Include="Helpers\ExplicitIndexAttribute.cs" />
     <Compile Include="Helpers\Lab4DataAccess.cs" />
+    <Compile Include="Helpers\Lab5DataAccess.cs" />
     <Compile Include="Models\Assignment2\MathPractice.cs" />
     <Compile Include="Models\Assignment2\Question.cs" />
     <Compile Include="Models\Helpers.cs" />
@@ -163,12 +164,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\BackgroundTask.cs" />
     <Compile Include="Tasks\TaskExecutor.cs" />
+    <Compile Include="ViewModels\Lab5ViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\academichonesty\academichonesty.css" />
     <Content Include="Content\academichonesty\images\academichonesty1x1.jpg" />
     <Content Include="Content\assignment2\assignment2.css" />
     <Content Include="Content\assignment2\images\check48.png" />
+    <Content Include="Content\lab5\lab5.css" />
     <Content Include="Content\studentconductprocess\images\2012-2013_ssr_a10x1.jpg" />
     <Content Include="Content\studentconductprocess\images\2012-2013_ssr_a1x1.jpg" />
     <Content Include="Content\studentconductprocess\images\2012-2013_ssr_a2x1.jpg" />
@@ -244,6 +247,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\custom\assignment2-functions.js" />
     <Content Include="Scripts\custom\lab4-functions.js" />
+    <Content Include="Scripts\custom\lab5-functions.js" />
     <Content Include="Scripts\jquery-1.9.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
@@ -304,6 +308,8 @@
     <Content Include="Views\Assignments\Assignment2.cshtml" />
     <Content Include="Views\Assignments\_Assignment2Partial.cshtml" />
     <Content Include="Views\Assignments\AssignmentMain.cshtml" />
+    <Content Include="Views\Labs\Lab5.cshtml" />
+    <Content Include="Views\Labs\_StockSummaryPartial.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
