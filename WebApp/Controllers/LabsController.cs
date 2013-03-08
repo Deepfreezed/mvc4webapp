@@ -9,6 +9,7 @@ using WebApp.ViewModels;
 using Omu.ValueInjecter;
 using System.Net;
 using System.IO;
+using System.Net.Cache;
 
 namespace WebApp.Controllers
 {
@@ -148,6 +149,8 @@ namespace WebApp.Controllers
 			string url = string.Format("http://finance.yahoo.com/q/cp?s={0}&ql=1", model.StockSymbol);
 			HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
 			httpWebRequest.Method = "GET";
+			httpWebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+        
 			//httpWebRequest.ContentType = "application/x-www-form-urlencoded";
 
 			HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
