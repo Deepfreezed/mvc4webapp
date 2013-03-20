@@ -200,7 +200,18 @@ namespace WebApp.Controllers
 				string url = string.Format("http://www.airport-data.com/usa-airports/state/{0}.html", viewModel.SelectedState);
 				string start = @"<table class=""table"" id=""tbl_airports"">";
 				string end = @"</table>";
-				string response = CommonFunctions.MakeHttpWebRequest(url, start, end);
+				string response = string.Empty;
+
+				try
+				{
+					response = CommonFunctions.MakeHttpWebRequest(url, start, end);
+				}
+				catch(Exception ex)
+				{
+
+					viewModel.AirportsNearLocationHTML = ex.Message + "<br />" + ex.InnerException.Message;
+				}
+				
 
 				if(!string.IsNullOrEmpty(response))
 				{
