@@ -197,13 +197,17 @@ namespace WebApp.Controllers
 			//}
 			if(!string.IsNullOrEmpty(viewModel.State))
 			{
-				string url = string.Format("http://www.airport-data.com/usa-airports/state/{0}.html", viewModel.SelectedState);
+				string url = string.Format("http://www.airport-data.com/usa-airports/state/Minnesota.html", viewModel.SelectedState);
 				string start = @"<table class=""table"" id=""tbl_airports"">";
 				string end = @"</table>";
 				string response = string.Empty;
 
-				response = CommonFunctions.MakeHttpWebRequest(url, start, end);
+				response = CommonFunctions.MakeHttpWebRequest("www.google.com", start, end);
 
+				response = CommonFunctions.MakeHttpWebRequest("www.airport-data.com/usa-airports/state/Minnesota.html", start, end);
+
+				response = CommonFunctions.MakeHttpWebRequest(url, start, end);
+				
 				if(!string.IsNullOrEmpty(response))
 				{
 					viewModel.AirportsNearLocationHTML = response + "</table>";
