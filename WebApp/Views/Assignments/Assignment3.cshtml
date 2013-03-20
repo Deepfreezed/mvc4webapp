@@ -1,0 +1,70 @@
+﻿@model WebApp.ViewModels.Assignment3ViewModel
+
+@{
+    ViewBag.Title = "Airport Weather";
+}
+
+@section styles{
+	@Styles.Render("~/assignment3/css")
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/custom/assignment3")
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+<section>
+   @using(Html.BeginForm("Assignment3", "Assignments", FormMethod.Post, new { Id = "Assignment3Form" }))
+    {
+		@Html.AntiForgeryToken()
+		@Html.ValidationSummary(true)
+
+        <table border="0" cellpadding="1" cellspacing="0" width="735">
+            @if(Model != null && string.IsNullOrEmpty(Model.AirportWeatherHTML) && string.IsNullOrEmpty(Model.AirportInformationHTML))
+            { 
+            <tr>
+                <td colspan="4">                    
+                   <p>@Html.ValidationMessageFor(m => m.AirportLocation)</p>
+                   <p>@Html.ValidationMessageFor(m => m.State)</p>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><span style="float:left; font-weight:bold;">City</span></td>
+                <td><span style="float:left; font-weight:bold;">State</span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><span style="padding-right:20px; font-weight:bold;">Find Airport:</span></td>
+                <td>@Html.TextBoxFor(m => m.AirportLocation, new { @autocomplete = "off", @style = "width:150px; vertical-align:middle;" })</td>
+                <td>@Html.DropDownListFor(m => m.State, new SelectList(Model.StateList, "Value", "Text"), new { @style = "height:30px; vertical-align:middle; font-size: 1.2em;" }) </td>
+                <td><input type="submit" name="AirportSearch" id="AirportSearch" value="Search" style="margin-left:20px;" /></td>
+            </tr>
+            }         
+            <tr>
+                <td colspan="4">
+                    @if(Model != null && !string.IsNullOrEmpty(Model.AirportsNearLocationHTML))
+                    {                        
+                        @Html.Raw(Model.AirportsNearLocationHTML);
+                    }
+                    else if(Model != null && !string.IsNullOrEmpty(Model.AirportWeatherHTML) && !string.IsNullOrEmpty(Model.AirportInformationHTML))
+                    { 
+                        <div class="huge_id">@Model.AirportCode</div>
+                        <div>
+                            @Html.Raw(Model.AirportWeatherHTML)
+                        </div>
+                        <div>
+                            @Html.Raw(Model.AirportInformationHTML)
+                        </div>
+                    }
+                </td>
+            </tr>
+        </table>
+       
+        
+    }  
+</section>

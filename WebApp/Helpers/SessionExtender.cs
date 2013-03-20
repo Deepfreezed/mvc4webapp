@@ -4,12 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.SessionState;
 
-namespace WebApp.Models
+namespace WebApp.Helpers
 {
-	public class Helpers
-	{
-	}
-
 	public static class SessionExtender
 	{
 		/// <summary>

@@ -141,5 +141,77 @@ namespace WebApp.Controllers
 
 			return View("Assignment2", viewModel);
 		}
+
+		//
+		// GET: /Assignments/Assignment3
+		public ActionResult Assignment3(string id)
+		{
+			Assignment3ViewModel viewModel = new Assignment3ViewModel();
+
+			if(!string.IsNullOrEmpty(id))
+			{
+				viewModel.AirportCode = id.ToUpper();
+
+				string url = string.Format("http://www.airport-data.com/airport/{0}/weather.html", id);
+				string start = @"<h2>Current Condition</h2>";
+				string end = @"<a name=""forecast"">";
+				string response = CommonFunctions.MakeHttpWebRequest(url, start, end);
+
+				if(!string.IsNullOrEmpty(response))
+				{
+					viewModel.AirportWeatherHTML = response;
+				}
+
+				string url2 = string.Format("http://www.airport-data.com/airport/{0}/", id);
+				string start2 = @"<h2>Location & QuickFacts</h2>";
+				string end2 = @"</section>";
+				string response2 = CommonFunctions.MakeHttpWebRequest(url2, start2, end2);
+
+				if(!string.IsNullOrEmpty(response2))
+				{
+					viewModel.AirportInformationHTML = response2;
+				}
+			}			
+
+			return View("Assignment3", viewModel);
+		}
+
+		[HttpPost]
+		[AllowAnonymous]
+		public ActionResult Assignment3(Assignment3ViewModel viewModel)
+		{
+			//if(!string.IsNullOrEmpty(viewModel.AirportLocation))
+			//{
+			//    string url = string.Format("http://www.airport-data.com/usa-airports/search.php?field=location&kw={0}", viewModel.AirportLocation);
+			//    string start = @"<table class=""table table-bordered"">";
+			//    string end = @"</table>";
+			//    string response = CommonFunctions.MakeHttpWebRequest(url, start, end);
+
+			//    if(!string.IsNullOrEmpty(response))
+			//    {
+			//        viewModel.AirportsNearLocationHTML = response + "</table>";
+
+			//        //Replace string
+			//        viewModel.AirportsNearLocationHTML = viewModel.AirportsNearLocationHTML.Replace(@"http://www.airport-data.com/airport/", "/Assignments/Assignment3/");
+			//    }
+			//}
+			if(!string.IsNullOrEmpty(viewModel.State))
+			{
+				string url = string.Format("http://www.airport-data.com/usa-airports/state/{0}.html", viewModel.SelectedState);
+				string start = @"<table class=""table"" id=""tbl_airports"">";
+				string end = @"</table>";
+				string response = CommonFunctions.MakeHttpWebRequest(url, start, end);
+
+				if(!string.IsNullOrEmpty(response))
+				{
+					viewModel.AirportsNearLocationHTML = response + "</table>";
+
+					//Replace string
+					viewModel.AirportsNearLocationHTML = viewModel.AirportsNearLocationHTML.Replace(@"http://www.airport-data.com/airport/", "/Assignments/Assignment3/");
+				}
+			}			
+
+			return View("Assignment3", viewModel);
+		}
     }
 }
