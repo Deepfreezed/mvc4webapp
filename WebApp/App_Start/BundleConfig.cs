@@ -29,7 +29,7 @@ namespace WebApp
 						"~/Scripts/custom/assignment2-functions.js"));
 
 			bundles.Add(new ScriptBundle("~/bundles/custom/assignment3").Include(
-						"~/Scripts/DataTables-1.9.4/media/js/jquery.dataTables.js",
+						"~/Scripts/jquery.dataTables.js",
 						"~/Scripts/custom/assignment3-functions.js"));
 			
 			// Use the development version of Modernizr to develop with and learn from. Then, when you're
