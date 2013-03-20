@@ -1,26 +1,97 @@
 ﻿@model System.Web.Mvc.HandleErrorInfo
-
 @{
     Layout = null;
 }
-
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Error</title>
+    <style>
+        body
+        {
+            font-family: "Verdana";
+            font-weight: normal;
+            font-size: .7em;
+            color: black;
+        }
+        p
+        {
+            font-family: "Verdana";
+            font-weight: normal;
+            color: black;
+            margin-top: -5px;
+        }
+        b
+        {
+            font-family: "Verdana";
+            font-weight: bold;
+            color: black;
+            margin-top: -5px;
+        }
+        H1
+        {
+            font-family: "Verdana";
+            font-weight: normal;
+            font-size: 18pt;
+            color: red;
+        }
+        H2
+        {
+            font-family: "Verdana";
+            font-weight: normal;
+            font-size: 14pt;
+            color: maroon;
+        }
+        pre
+        {
+            font-family: "Lucida Console";
+            font-size: .9em;
+        }
+        .marker
+        {
+            font-weight: bold;
+            color: black;
+            text-decoration: none;
+        }
+        .version
+        {
+            color: gray;
+        }
+        .error
+        {
+            margin-bottom: 10px;
+        }
+        .expandable
+        {
+            text-decoration: underline;
+            font-weight: bold;
+            color: navy;
+            cursor: hand;
+        }
+    </style>
 </head>
-<body>
+<body bgcolor="white">
     <h2>
         Sorry, an error occurred while processing your request.
-        <br />
-        @Model.ActionName
-        <br />
-        @Model.ControllerName
-        <br />
-        @Model.Exception.Message
-        <br />
-        @Model.Exception.StackTrace
     </h2>
+    <br />
+    @Model.Exception.Message
+    <br />
+    @Model.Exception.InnerException.Message
+    <br />
+    <b> Source File: </b> @Model.Exception.Source
+    <br><br>
+    <table width="100%" bgcolor="#ffffcc">
+        <tr>
+            <td>
+                <code>
+                    <pre>
+                        @Model.Exception.StackTrace
+                    </pre>
+                </code>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

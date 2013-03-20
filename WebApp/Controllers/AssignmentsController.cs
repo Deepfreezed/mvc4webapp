@@ -202,16 +202,9 @@ namespace WebApp.Controllers
 				string end = @"</table>";
 				string response = string.Empty;
 
-				try
-				{
-					response = CommonFunctions.MakeHttpWebRequest(url, start, end);
-				}
-				catch(Exception ex)
-				{
+				response = CommonFunctions.MakeHttpWebRequest(url, start, end);
 
-					viewModel.AirportsNearLocationHTML = ex.Message + "<br />" + ex.InnerException.Message;
-				}
-				
+				throw new ArgumentException("Testing custom error");
 
 				if(!string.IsNullOrEmpty(response))
 				{
