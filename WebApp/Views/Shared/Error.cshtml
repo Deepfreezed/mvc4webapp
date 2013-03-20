@@ -1,4 +1,6 @@
-﻿@{
+﻿@model System.Web.Mvc.HandleErrorInfo
+
+@{
     Layout = null;
 }
 
@@ -11,6 +13,14 @@
 <body>
     <h2>
         Sorry, an error occurred while processing your request.
+        <br />
+        @Model.ActionName
+        <br />
+        @Model.ControllerName
+        <br />
+        @Model.Exception.Message
+        <br />
+        @Model.Exception.StackTrace
     </h2>
 </body>
 </html>
