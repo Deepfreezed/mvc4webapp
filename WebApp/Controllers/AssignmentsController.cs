@@ -204,8 +204,6 @@ namespace WebApp.Controllers
 
 				response = CommonFunctions.MakeHttpWebRequest(url, start, end);
 
-				throw new ArgumentException("Testing custom error");
-
 				if(!string.IsNullOrEmpty(response))
 				{
 					viewModel.AirportsNearLocationHTML = response + "</table>";
