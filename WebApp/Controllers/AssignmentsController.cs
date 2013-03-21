@@ -197,14 +197,18 @@ namespace WebApp.Controllers
 			//}
 			if(!string.IsNullOrEmpty(viewModel.State))
 			{
-				string url = string.Format("http://www.airport-data.com/usa-airports/state/Minnesota.html", viewModel.SelectedState);
+				string url = string.Format("http://airport-data.com/usa-airports/state/{0}.html", viewModel.SelectedState);
 				string start = @"<table class=""table"" id=""tbl_airports"">";
 				string end = @"</table>";
 				string response = string.Empty;
 
-				response = CommonFunctions.MakeHttpWebRequest("www.google.com", start, end);
+				response = CommonFunctions.MakeHttpWebRequest("http://finance.yahoo.com/q?s=bac&ql=1", start, end);
 
-				response = CommonFunctions.MakeHttpWebRequest("www.airport-data.com/usa-airports/state/Minnesota.html", start, end);
+				response = CommonFunctions.MakeHttpWebRequest("http://google.com", start, end);
+
+				response = CommonFunctions.MakeHttpWebRequest("http://www.google.com", start, end);
+
+				response = CommonFunctions.MakeHttpWebRequest("http://airport-data.com/usa-airports/state/Minnesota.html", start, end);
 
 				response = CommonFunctions.MakeHttpWebRequest(url, start, end);
 				
@@ -220,4 +224,4 @@ namespace WebApp.Controllers
 			return View("Assignment3", viewModel);
 		}
     }
-}
+};
