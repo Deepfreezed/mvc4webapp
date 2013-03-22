@@ -266,6 +266,9 @@
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\lab5\lab5.css" />
+    <Content Include="Content\Lab6\Style1.css" />
+    <Content Include="Content\Lab6\Style2.css" />
+    <Content Include="Content\Lab6\Style3.css" />
     <Content Include="Content\studentconductprocess\images\2012-2013_ssr_a10x1.jpg" />
     <Content Include="Content\studentconductprocess\images\2012-2013_ssr_a1x1.jpg" />
     <Content Include="Content\studentconductprocess\images\2012-2013_ssr_a2x1.jpg" />
@@ -343,6 +346,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\custom\assignment2-functions.js" />
     <Content Include="Scripts\custom\assignment3-functions.js" />
+    <Content Include="Scripts\custom\lab6-functions.js" />
     <Content Include="Scripts\custom\lab4-functions.js" />
     <Content Include="Scripts\custom\lab5-functions.js" />
     <Content Include="Scripts\DataTables-1.9.4\docs\media\js\doc.js" />
