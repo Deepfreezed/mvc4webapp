@@ -192,5 +192,12 @@ namespace WebApp.Controllers
 
 			return View("Lab5", model);
 		}
+
+		//
+		// POST: /Labs/Lab6
+		public ActionResult Lab6()
+		{			
+			return View("Lab6", null);
+		}
     }
 }

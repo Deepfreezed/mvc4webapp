@@ -179,36 +179,13 @@ namespace WebApp.Controllers
 		[HttpPost]
 		[AllowAnonymous]
 		public ActionResult Assignment3(Assignment3ViewModel viewModel)
-		{
-			//if(!string.IsNullOrEmpty(viewModel.AirportLocation))
-			//{
-			//    string url = string.Format("http://www.airport-data.com/usa-airports/search.php?field=location&kw={0}", viewModel.AirportLocation);
-			//    string start = @"<table class=""table table-bordered"">";
-			//    string end = @"</table>";
-			//    string response = CommonFunctions.MakeHttpWebRequest(url, start, end);
-
-			//    if(!string.IsNullOrEmpty(response))
-			//    {
-			//        viewModel.AirportsNearLocationHTML = response + "</table>";
-
-			//        //Replace string
-			//        viewModel.AirportsNearLocationHTML = viewModel.AirportsNearLocationHTML.Replace(@"http://www.airport-data.com/airport/", "/Assignments/Assignment3/");
-			//    }
-			//}
+		{			
 			if(!string.IsNullOrEmpty(viewModel.State))
 			{
 				string url = string.Format("http://airport-data.com/usa-airports/state/{0}.html", viewModel.SelectedState);
 				string start = @"<table class=""table"" id=""tbl_airports"">";
 				string end = @"</table>";
 				string response = string.Empty;
-
-				response = CommonFunctions.MakeHttpWebRequest("http://finance.yahoo.com/q?s=bac&ql=1", start, end);
-
-				response = CommonFunctions.MakeHttpWebRequest("http://google.com", start, end);
-
-				response = CommonFunctions.MakeHttpWebRequest("http://www.google.com", start, end);
-
-				response = CommonFunctions.MakeHttpWebRequest("http://airport-data.com/usa-airports/state/Minnesota.html", start, end);
 
 				response = CommonFunctions.MakeHttpWebRequest(url, start, end);
 				

@@ -46,7 +46,7 @@
         pre
         {
             font-family: "Lucida Console";
-            font-size: 1.25em;
+            font-size: 2em;
         }
         .marker
         {
@@ -79,6 +79,10 @@
     @Model.Exception.Message
     <br />
     <b> Data: </b> @Model.Exception.Data
+    <br />
+    <b> Source: </b> @Model.Exception.Source
+    <br>    
+    <b> Target Site: </b> @Model.Exception.TargetSite
     <br><br>
     <table width="100%" bgcolor="#ffffcc">
         <tr>

@@ -129,12 +129,16 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="WebActivatorEx">
+      <HintPath>..\packages\WebActivatorEx.2.0.1\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WebGrease.1.3.0\lib\WebGrease.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\BootstrapBundleConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -176,6 +180,10 @@
     <Content Include="Content\assignment2\images\check48.png" />
     <Content Include="Content\assignment3\assignment3.css" />
     <Content Include="Content\assignment3\dataTables.airports.css" />
+    <Content Include="Content\bootstrap-responsive.css" />
+    <Content Include="Content\bootstrap-responsive.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\DataTables-1.9.4\docs\media\css\doc.css" />
     <Content Include="Content\DataTables-1.9.4\docs\media\css\shCore.css" />
     <Content Include="Content\DataTables-1.9.4\docs\media\css\shThemeDataTables.css" />
@@ -255,6 +263,8 @@
     <Content Include="Content\DataTables-1.9.4\media\images\sort_both.png" />
     <Content Include="Content\DataTables-1.9.4\media\images\sort_desc.png" />
     <Content Include="Content\DataTables-1.9.4\media\images\sort_desc_disabled.png" />
+    <Content Include="Content\images\glyphicons-halflings-white.png" />
+    <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\lab5\lab5.css" />
     <Content Include="Content\studentconductprocess\images\2012-2013_ssr_a10x1.jpg" />
     <Content Include="Content\studentconductprocess\images\2012-2013_ssr_a1x1.jpg" />
@@ -329,6 +339,8 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\custom\assignment2-functions.js" />
     <Content Include="Scripts\custom\assignment3-functions.js" />
     <Content Include="Scripts\custom\lab4-functions.js" />
@@ -447,6 +459,8 @@
     <Content Include="Views\Labs\Lab5.cshtml" />
     <Content Include="Views\Labs\_StockSummaryPartial.cshtml" />
     <Content Include="Views\Assignments\Assignment3.cshtml" />
+    <Content Include="Views\Labs\Lab6.cshtml" />
+    <Content Include="Views\Shared\_Layout_bstrp.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
