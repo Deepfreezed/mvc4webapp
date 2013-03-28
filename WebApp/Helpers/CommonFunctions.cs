@@ -20,6 +20,7 @@ namespace WebApp.Helpers
 		{
 			string results = string.Empty;
 			HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+			httpWebRequest.Proxy = new WebProxy("64.120.252.18", 80);
 			httpWebRequest.Method = "GET";
 			httpWebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
 
