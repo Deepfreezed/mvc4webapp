@@ -263,6 +263,10 @@
     <Content Include="Content\DataTables-1.9.4\media\images\sort_both.png" />
     <Content Include="Content\DataTables-1.9.4\media\images\sort_desc.png" />
     <Content Include="Content\DataTables-1.9.4\media\images\sort_desc_disabled.png" />
+    <Content Include="Content\font-awesome-ie7.min.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\font\fontawesome-webfont.svg" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\lab5\lab5.css" />
@@ -445,6 +449,10 @@
     <None Include="Content\DataTables-1.9.4\extras\TableTools\media\images\psd\file_types.psd" />
     <None Include="Content\DataTables-1.9.4\extras\TableTools\media\images\psd\printer.psd" />
     <None Include="Content\DataTables-1.9.4\media\images\Sorting icons.psd" />
+    <Content Include="Content\font\fontawesome-webfont.eot" />
+    <Content Include="Content\font\fontawesome-webfont.ttf" />
+    <Content Include="Content\font\fontawesome-webfont.woff" />
+    <Content Include="Content\font\FontAwesome.otf" />
     <None Include="Scripts\DataTables-1.9.4\extras\AutoFill\media\js\AutoFill.min.js.gz" />
     <None Include="Scripts\DataTables-1.9.4\extras\ColReorder\media\js\ColReorder.min.js.gz" />
     <None Include="Scripts\DataTables-1.9.4\extras\ColVis\media\js\ColVis.min.js.gz" />
@@ -464,7 +472,8 @@
     <Content Include="Views\Labs\_StockSummaryPartial.cshtml" />
     <Content Include="Views\Assignments\Assignment3.cshtml" />
     <Content Include="Views\Labs\Lab6.cshtml" />
-    <Content Include="Views\Shared\_Layout_bstrp.cshtml" />
+    <Content Include="Views\Shared\_Layout_Lab6.cshtml" />
+    <Content Include="Views\Shared\_Bootstrap_Layout.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

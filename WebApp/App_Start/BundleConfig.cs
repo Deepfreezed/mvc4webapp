@@ -9,7 +9,8 @@ namespace WebApp
 		public static void RegisterBundles(BundleCollection bundles)
 		{
 			bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-						"~/Scripts/jquery-{version}.js"));
+						"~/Scripts/jquery-{version}.js",
+						"~/Scripts/bootstrap.js"));
 
 			bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
 						"~/Scripts/jquery-ui-{version}.js"));
@@ -62,7 +63,13 @@ namespace WebApp
 			bundles.Add(new StyleBundle("~/lab5/css").Include("~/Content/lab5/lab5.css"));
 
 			bundles.Add(new StyleBundle("~/assignment3/css").Include(
-						"~/Content/assignment3/assignment3.css"));
+						"~/Content/assignment3/assignment3.css",
+						"~/Content/assignment3/dataTables.airports.css"));
+
+			bundles.Add(new StyleBundle("~/Content/bootstrapcss").Include(
+						"~/Content/bootstrap.css",
+						"~/Content/bootstrap-responsive.css",						
+						"~/Content/font-awesome.css"));
 		}
 	}
 }

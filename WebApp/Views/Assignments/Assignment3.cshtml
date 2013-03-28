@@ -8,7 +8,7 @@
 	@Styles.Render("~/assignment3/css")
 }
 
-@section Scripts {
+@section Scripts{
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/custom/assignment3")
 }
@@ -38,11 +38,11 @@
                 <td><span style="float:left; font-weight:bold;">State</span></td>
                 <td></td>
             </tr>
-            <tr>
+            <tr style="vertical-align:top;">
                 <td><span style="padding-right:20px; font-weight:bold;">Find Airport:</span></td>
-                <td>@Html.TextBoxFor(m => m.AirportLocation, new { @autocomplete = "off", @style = "width:150px; vertical-align:middle;" })</td>
-                <td>@Html.DropDownListFor(m => m.State, new SelectList(Model.StateList, "Value", "Text"), new { @style = "height:30px; vertical-align:middle; font-size: 1.2em;" }) </td>
-                <td><input type="submit" name="AirportSearch" id="AirportSearch" value="Search" style="margin-left:20px;" /></td>
+                <td>@Html.TextBoxFor(m => m.AirportLocation, new { @autocomplete = "off", @style = "width:150px;" })</td>
+                <td>@Html.DropDownListFor(m => m.State, new SelectList(Model.StateList, "Value", "Text")) </td>
+                <td><input type="submit" name="AirportSearch" id="AirportSearch" value="Search" class="btn btn-primary" /></td>
             </tr>
             }         
             <tr>
@@ -64,7 +64,5 @@
                 </td>
             </tr>
         </table>
-       
-        
     }  
 </section>

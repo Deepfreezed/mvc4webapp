@@ -51,6 +51,7 @@ function updateURLParameter(url, param, paramVal) {
 
 function refreshPage() {
 	var style = parseInt(getParameterByName("style"));
+	var refresh = parseInt(getParameterByName("refresh"));
 		
 	if (style != null && style >= 3) {
 		style = 1;
@@ -64,23 +65,29 @@ function refreshPage() {
 
 	var newUrl = updateURLParameter(window.location.href, "style", style);
 
+	var intervalValue = $('#RefreshIntervalValue').val();
+	if (intervalValue != null && intervalValue.length > 0) {
+		newUrl = updateURLParameter(newUrl, "refresh", intervalValue);
+	}	
+
 	window.location.href = newUrl;
 }
 
 $(document).ready(function () {
 	var style = getParameterByName("style");
+	var refresh = parseInt(getParameterByName("refresh"));
 
 	if (style != null && style.length > 0 && style < 4) {
-		$('link#style').attr('href', '../Content/Lab6/Style' + style + '.css');	
+		$('link#style').attr('href', '../Content/Lab6/Style' + style + '.css');
 	}
 	else {
-		$('link#style').attr('href', '../Content/Lab6/Style1.css');		
+		$('link#style').attr('href', '../Content/Lab6/Style1.css');
 	}
 
 	if ($("#RefreshInterval").length > 0) {
-		var intervalValue = $('#RefreshIntervalValue').val();
-
-		if (intervalValue.length > 0) {
+		var intervalValue = parseInt(getParameterByName("refresh"));
+		
+		if (intervalValue > 0) {
 			$("#RefreshInterval").val(intervalValue);
 		}
 		else {
@@ -88,7 +95,7 @@ $(document).ready(function () {
 		}
 
 		if (intervalValue != null && intervalValue.length > 0) {
-			window.setTimeout('refreshPage()', intervalValue * 60 * 1000);
+			window.setTimeout('refreshPage()', intervalValue * 60 * 100);
 		}
 	}
 
