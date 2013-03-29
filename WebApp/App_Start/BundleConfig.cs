@@ -17,7 +17,8 @@ namespace WebApp
 
 			bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
 						"~/Scripts/jquery.unobtrusive*",
-						"~/Scripts/jquery.validate*"));
+						"~/Scripts/jquery.validate*",
+						"~/Scripts/custom/bootstrap-error-classes.js"));
 
 			bundles.Add(new ScriptBundle("~/bundles/custom/lab4").Include(
 						"~/Scripts/custom/lab4-functions.js"));

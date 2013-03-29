@@ -23,17 +23,21 @@
         <legend>User Name and User ID</legend>
         <ol>
             <li>
-                @Html.LabelFor(m => m.UserName)
-                @Html.TextBoxFor(m => m.UserName)
-                @Html.ValidationMessageFor(m => m.UserName)
+                <div class="control-group">
+                    @Html.LabelFor(m => m.UserName)
+                    @Html.TextBoxFor(m => m.UserName)
+                    @Html.ValidationMessageFor(m => m.UserName)
+                </div>
             </li>
             <li>
-                @Html.LabelFor(m => m.UserID)
-                @Html.TextBoxFor(m => m.UserID)
-                @Html.ValidationMessageFor(m => m.UserID)
+                <div class="control-group">
+                    @Html.LabelFor(m => m.UserID)
+                    @Html.TextBoxFor(m => m.UserID)
+                    @Html.ValidationMessageFor(m => m.UserID)
+                </div>
             </li>            
         </ol>
-        <input type="submit" value="Calculate Modulus" />
+        <input type="submit" value="Calculate Modulus" class="btn btn-primary" />
     </fieldset>
 }
 </section>

@@ -350,6 +350,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\custom\assignment2-functions.js" />
     <Content Include="Scripts\custom\assignment3-functions.js" />
+    <Content Include="Scripts\custom\bootstrap-error-classes.js" />
     <Content Include="Scripts\custom\lab6-functions.js" />
     <Content Include="Scripts\custom\lab4-functions.js" />
     <Content Include="Scripts\custom\lab5-functions.js" />
