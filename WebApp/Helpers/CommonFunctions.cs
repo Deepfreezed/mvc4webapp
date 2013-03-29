@@ -20,7 +20,6 @@ namespace WebApp.Helpers
 		{
 			string results = string.Empty;
 			HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-			httpWebRequest.Proxy = new WebProxy("64.120.252.18", 80);
 			httpWebRequest.Method = "GET";
 			httpWebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
 
@@ -40,6 +39,67 @@ namespace WebApp.Helpers
 			}
 
 			return results;
+		}
+
+		public static string MakeHttpWebRequest(string url, string start, string end, string proxyIP, int proxyPort)
+		{
+			string results = string.Empty;
+			HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+			httpWebRequest.Proxy = new WebProxy(proxyIP, proxyPort);
+			httpWebRequest.Method = "GET";
+			httpWebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+
+			//httpWebRequest.ContentType = "application/x-www-form-urlencoded";
+
+			HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+			Stream responseStream = httpWebResponse.GetResponseStream();
+			StreamReader streamReader = new StreamReader(responseStream);
+			string response = streamReader.ReadToEnd();
+
+			int startIndex = response.IndexOf(start);
+			int endIndex = response.IndexOf(end);
+
+			if(startIndex > 0 && endIndex > 0 && (endIndex > startIndex))
+			{
+				results = response.Substring(startIndex, endIndex - startIndex);
+			}
+
+			return results;
+		}
+
+		/// <summary>
+		/// Creates the sessions.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		public static void StoreCookie(string key, object value)
+		{
+			DateTime SessionExpiration = DateTime.UtcNow.AddHours(24);
+
+			//Save user ID cookie
+			HttpCookie authCookie = new HttpCookie(key, value.ToString())
+			{
+				Expires = SessionExpiration
+			};
+
+			HttpContext.Current.Response.Cookies.Add(authCookie);
+		}
+
+		/// <summary>
+		/// Creates the sessions.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		public static string ReadCookie(string key)
+		{
+			HttpCookie cookie = HttpContext.Current.Request.Cookies[key];
+
+			if(cookie != null)
+			{
+				return cookie.Value;
+			}
+			else
+			{
+				return string.Empty;
+			}
 		}
 
 		public static readonly IDictionary<string, string> StateDictionary = new Dictionary<string, string> {

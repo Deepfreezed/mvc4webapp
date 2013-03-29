@@ -144,7 +144,7 @@ namespace WebApp.Controllers
 
 		//
 		// GET: /Assignments/Assignment3
-		public ActionResult Assignment3(string id)
+		public ActionResult Assignment3(string id, string UseProxy)
 		{
 			Assignment3ViewModel viewModel = new Assignment3ViewModel();
 
@@ -155,7 +155,7 @@ namespace WebApp.Controllers
 				string url = string.Format("http://www.airport-data.com/airport/{0}/weather.html", id);
 				string start = @"<h2>Current Condition</h2>";
 				string end = @"<a name=""forecast"">";
-				string response = CommonFunctions.MakeHttpWebRequest(url, start, end);
+				string response = Assignment3MakeHttpWebRequest(viewModel, url, start, end);
 
 				if(!string.IsNullOrEmpty(response))
 				{
@@ -165,29 +165,38 @@ namespace WebApp.Controllers
 				string url2 = string.Format("http://www.airport-data.com/airport/{0}/", id);
 				string start2 = @"<h2>Location & QuickFacts</h2>";
 				string end2 = @"</section>";
-				string response2 = CommonFunctions.MakeHttpWebRequest(url2, start2, end2);
+				string response2 = Assignment3MakeHttpWebRequest(viewModel, url2, start2, end2);
 
 				if(!string.IsNullOrEmpty(response2))
 				{
 					viewModel.AirportInformationHTML = response2;
 				}
-			}			
+			}
+			else
+			{				
+				//Check if a proxy is setup in cookies
+				string proxyIP = CommonFunctions.ReadCookie("ProxyIP");
+				int proxyPort;
+				int.TryParse(CommonFunctions.ReadCookie("ProxyPort"), out proxyPort);
+
+				viewModel.ProxyIP = proxyIP;
+				viewModel.ProxyPort = proxyPort;
+			}
 
 			return View("Assignment3", viewModel);
 		}
 
 		[HttpPost]
 		[AllowAnonymous]
-		public ActionResult Assignment3(Assignment3ViewModel viewModel)
-		{			
+		public ActionResult Assignment3(Assignment3ViewModel viewModel, string UseProxy)
+		{
 			if(!string.IsNullOrEmpty(viewModel.State))
 			{
 				string url = string.Format("http://airport-data.com/usa-airports/state/{0}.html", viewModel.SelectedState);
 				string start = @"<table class=""table"" id=""tbl_airports"">";
 				string end = @"</table>";
-				string response = string.Empty;
 
-				response = CommonFunctions.MakeHttpWebRequest(url, start, end);
+				string response = Assignment3MakeHttpWebRequest(viewModel, url, start, end);						
 				
 				if(!string.IsNullOrEmpty(response))
 				{
@@ -199,6 +208,34 @@ namespace WebApp.Controllers
 			}			
 
 			return View("Assignment3", viewModel);
+		}
+
+		/// <summary>
+		/// Assignment3s the make HTTP web request.
+		/// </summary>
+		/// <param name="viewModel">The view model.</param>
+		/// <param name="url">The URL.</param>
+		/// <param name="start">The start.</param>
+		/// <param name="end">The end.</param>
+		/// <returns></returns>
+		private static string Assignment3MakeHttpWebRequest(Assignment3ViewModel viewModel, string url, string start, string end)
+		{
+			string response = string.Empty;
+
+			if(!string.IsNullOrEmpty(viewModel.ProxyIP) && viewModel.ProxyPort > 0)
+			{
+				response = CommonFunctions.MakeHttpWebRequest(url, start, end, viewModel.ProxyIP, viewModel.ProxyPort);
+
+				//Store values in cookies
+				CommonFunctions.StoreCookie("ProxyIP", viewModel.ProxyIP);
+				CommonFunctions.StoreCookie("ProxyPort", viewModel.ProxyPort);
+			}
+			else
+			{
+				response = CommonFunctions.MakeHttpWebRequest(url, start, end);
+			}
+
+			return response;
 		}
     }
 };

@@ -18,7 +18,17 @@
 </hgroup>
 
 <section>
-   @using(Html.BeginForm("Assignment3", "Assignments", FormMethod.Post, new { Id = "Assignment3Form" }))
+    @{string useProxy;}
+    @if(Request.QueryString["useproxy"] != null && Request.QueryString["useproxy"].ToString() == "1")
+    {
+        useProxy = "1";
+    }
+    else
+    {
+        useProxy = "0";
+    }
+
+    @using(Html.BeginForm("Assignment3", "Assignments", FormMethod.Post, new { Id = "Assignment3Form", UseProxy = useProxy }))
     {
 		@Html.AntiForgeryToken()
 		@Html.ValidationSummary(true)
@@ -26,24 +36,33 @@
         <table border="0" cellpadding="1" cellspacing="0" width="735">
             @if(Model != null && string.IsNullOrEmpty(Model.AirportWeatherHTML) && string.IsNullOrEmpty(Model.AirportInformationHTML))
             { 
-            <tr>
-                <td colspan="4">                    
-                   <p>@Html.ValidationMessageFor(m => m.AirportLocation)</p>
-                   <p>@Html.ValidationMessageFor(m => m.State)</p>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><span style="float:left; font-weight:bold;">City</span></td>
-                <td><span style="float:left; font-weight:bold;">State</span></td>
-                <td></td>
-            </tr>
-            <tr style="vertical-align:top;">
-                <td><span style="padding-right:20px; font-weight:bold;">Find Airport:</span></td>
-                <td>@Html.TextBoxFor(m => m.AirportLocation, new { @autocomplete = "off", @style = "width:150px;" })</td>
-                <td>@Html.DropDownListFor(m => m.State, new SelectList(Model.StateList, "Value", "Text")) </td>
-                <td><input type="submit" name="AirportSearch" id="AirportSearch" value="Search" class="btn btn-primary" /></td>
-            </tr>
+                <tr>
+                    <td colspan="4">                    
+                        <p>@Html.ValidationMessageFor(m => m.AirportLocation)</p>
+                        <p>@Html.ValidationMessageFor(m => m.State)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><span style="float:left; font-weight:bold;">City</span></td>
+                    <td><span style="float:left; font-weight:bold;">State</span></td>
+                    <td></td>
+                </tr>
+                <tr style="vertical-align:top;">
+                    <td><span style="padding-right:20px; font-weight:bold;">Find Airport:</span></td>
+                    <td>@Html.TextBoxFor(m => m.AirportLocation, new { @autocomplete = "off", @style = "width:150px;" })</td>
+                    <td>@Html.DropDownListFor(m => m.State, new SelectList(Model.StateList, "Value", "Text")) </td>
+                    <td><input type="submit" name="AirportSearch" id="AirportSearch" value="Search" class="btn btn-primary" /></td>
+                </tr>
+                if(useProxy == "1")
+                {
+                    <tr style="vertical-align:top;">
+                        <td><span style="padding-right:20px; font-weight:bold;">Use Proxy Server:<br /><a href="http://www.hidemyass.com/proxy-list/" target="_blank">Free Proxy List</a></span></td>
+                        <td>@Html.TextBoxFor(m => m.ProxyIP, new { @style = "width:150px;" })</td>
+                        <td>@Html.TextBoxFor(m => m.ProxyPort, new { @style = "width:50px;" })</td>
+                        <td></td>
+                    </tr>
+                }
             }         
             <tr>
                 <td colspan="4">

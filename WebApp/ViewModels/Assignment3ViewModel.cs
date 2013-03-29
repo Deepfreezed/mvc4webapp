@@ -90,7 +90,10 @@ namespace WebApp.ViewModels
 		public string AirportInformationHTML { get; set; }
 		public string AirportWeatherHTML { get; set; }
 		public IEnumerable<SelectListItem> StateList { get; set; }
-		
+
+		public string ProxyIP { get; set; }
+		public int ProxyPort { get; set; }
+
 		public string SelectedState 
 		{ 
 			get
