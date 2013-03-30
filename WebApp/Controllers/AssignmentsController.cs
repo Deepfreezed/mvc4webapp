@@ -49,13 +49,19 @@ namespace WebApp.Controllers
 
 		public ActionResult Assignment2()
 		{
+			//Initialize Data Model
 			Assignment2DataAccess dataAccess = new Assignment2DataAccess(RavenSession);
+
+			//Retrieve quiz from the database
 			MathPractice exam = dataAccess.RetrieveFromSession();
 			Question currentQuestion = exam.CurrentQuestion;
+
+			//Initialize View Model
 			Assignment2ViewModel viewModel = new Assignment2ViewModel();
 
 			if(currentQuestion != null)
 			{
+				//Use Object mapper to map Data Model to View Model
 				viewModel.InjectFrom(exam, currentQuestion);
 				viewModel.Answer = string.Empty;
 			}
