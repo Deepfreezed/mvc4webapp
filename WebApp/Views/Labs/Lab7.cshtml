@@ -1,0 +1,68 @@
+﻿@using WebApp.Models
+@model WebApp.ViewModels.Lab7ViewModel
+
+@{
+    ViewBag.Title = "MSU Course Listings";
+}
+
+@section styles{
+	@Styles.Render("~/Content/datatable")
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/dataTables")
+    @Scripts.Render("~/bundles/custom/lab7")
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+<section>
+    @using(Html.BeginForm("Lab7", "Labs", FormMethod.Post, new { Id = "Lab7Form" }))
+    {
+        @Html.AntiForgeryToken()
+		@Html.ValidationSummary(true)
+
+        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover" id="course_listing">
+            <thead>
+		        <tr>
+			        <th>Course ID</th>
+			        <th>Course Name</th>
+                    <th align="center">Credits</th>
+			        <th>Days</th>
+			        <th>Room</th>
+			        <th>Instructor</th>
+                    <th>Size</th>
+                    <th>Enrolled</th>
+		        </tr>
+	        </thead>
+            <tbody>
+                @foreach(Course course in Model.Courses)
+                {
+                    <tr>
+			            <td>@course.Department&nbsp;@course.CourseID</td>
+			            <td>@course.CourseName</td>
+                        <td align="center">@course.Credits</td>
+			            <td>@course.Days</td>
+			            <td>@course.Room</td>
+			            <td>@course.Instructor</td>
+                        <td>@course.Size</td>
+                        <td>@course.Enrolled</td>
+		            </tr>
+                }@*
+		        
+		        <tr class="even gradeC">
+			        <td>Trident</td>
+			        <td>Internet
+				         Explorer 5.0</td>
+			        <td>Win 95+</td>
+			        <td class="center">5</td>
+			        <td class="center">C</td>
+		        </tr>*@
+            </tbody>
+        </table>
+        @*<a class="btn" href="#"><i class="icon-cog"></i> Default</a>*@
+    }
+</section>

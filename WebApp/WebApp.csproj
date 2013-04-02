@@ -40,6 +40,9 @@
     <Reference Include="Antlr3.Runtime, Version=3.3.1.7705, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.3.0\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net40\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -58,6 +61,9 @@
     </Reference>
     <Reference Include="Raven.Database">
       <HintPath>..\packages\RavenDB.Database.2.0.2261\lib\net40\Raven.Database.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.104.1\lib\net4\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -161,6 +167,8 @@
     <Compile Include="Models\Assignment2\Question.cs" />
     <Compile Include="Models\Assignment3\Airport.cs" />
     <Compile Include="Helpers\SessionExtender.cs" />
+    <Compile Include="Models\Course.cs" />
+    <Compile Include="Models\RestClientSettings.cs" />
     <Compile Include="ViewModels\Assignment2ViewModel.cs" />
     <Compile Include="ViewModels\Assignment3ViewModel.cs" />
     <Compile Include="ViewModels\Lab4ViewModel.cs" />
@@ -172,6 +180,7 @@
     <Compile Include="Tasks\BackgroundTask.cs" />
     <Compile Include="Tasks\TaskExecutor.cs" />
     <Compile Include="ViewModels\Lab5ViewModel.cs" />
+    <Compile Include="ViewModels\Lab7ViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\academichonesty\academichonesty.css" />
@@ -180,6 +189,7 @@
     <Content Include="Content\assignment2\images\check48.png" />
     <Content Include="Content\assignment3\assignment3.css" />
     <Content Include="Content\assignment3\dataTables.airports.css" />
+    <Content Include="Content\bootstrap-datatable.css" />
     <Content Include="Content\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap-responsive.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -267,8 +277,20 @@
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\font\fontawesome-webfont.svg" />
+    <Content Include="Content\images\back_disabled.png" />
+    <Content Include="Content\images\back_enabled.png" />
+    <Content Include="Content\images\back_enabled_hover.png" />
+    <Content Include="Content\images\favicon.ico" />
+    <Content Include="Content\images\forward_disabled.png" />
+    <Content Include="Content\images\forward_enabled.png" />
+    <Content Include="Content\images\forward_enabled_hover.png" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
+    <Content Include="Content\images\sort_asc.png" />
+    <Content Include="Content\images\sort_asc_disabled.png" />
+    <Content Include="Content\images\sort_both.png" />
+    <Content Include="Content\images\sort_desc.png" />
+    <Content Include="Content\images\sort_desc_disabled.png" />
     <Content Include="Content\lab5\lab5.css" />
     <Content Include="Content\Lab6\Style1.css" />
     <Content Include="Content\Lab6\Style2.css" />
@@ -351,9 +373,11 @@
     <Content Include="Scripts\custom\assignment2-functions.js" />
     <Content Include="Scripts\custom\assignment3-functions.js" />
     <Content Include="Scripts\custom\bootstrap-error-classes.js" />
+    <Content Include="Scripts\custom\bootstrap-datatable.js" />
     <Content Include="Scripts\custom\lab6-functions.js" />
     <Content Include="Scripts\custom\lab4-functions.js" />
     <Content Include="Scripts\custom\lab5-functions.js" />
+    <Content Include="Scripts\custom\lab7-functions.js" />
     <Content Include="Scripts\DataTables-1.9.4\docs\media\js\doc.js" />
     <Content Include="Scripts\DataTables-1.9.4\docs\media\js\jquery.js" />
     <Content Include="Scripts\DataTables-1.9.4\docs\media\js\shBrushJScript.js" />
@@ -454,6 +478,7 @@
     <Content Include="Content\font\fontawesome-webfont.ttf" />
     <Content Include="Content\font\fontawesome-webfont.woff" />
     <Content Include="Content\font\FontAwesome.otf" />
+    <None Include="Content\images\Sorting icons.psd" />
     <None Include="Scripts\DataTables-1.9.4\extras\AutoFill\media\js\AutoFill.min.js.gz" />
     <None Include="Scripts\DataTables-1.9.4\extras\ColReorder\media\js\ColReorder.min.js.gz" />
     <None Include="Scripts\DataTables-1.9.4\extras\ColVis\media\js\ColVis.min.js.gz" />
@@ -475,6 +500,7 @@
     <Content Include="Views\Labs\Lab6.cshtml" />
     <Content Include="Views\Shared\_Layout_Lab6.cshtml" />
     <Content Include="Views\Shared\_Bootstrap_Layout.cshtml" />
+    <Content Include="Views\Labs\Lab7.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

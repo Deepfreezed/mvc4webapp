@@ -6,11 +6,43 @@ using System.Net;
 using System.IO;
 using System.Net.Cache;
 using System.Web.Mvc;
+using WebApp.Models;
+using RestSharp;
 
 namespace WebApp.Helpers
 {
 	public class CommonFunctions
 	{
+		/// <summary>
+		/// Makes the HTTP web request.
+		/// </summary>
+		/// <param name="settings">The settings.</param>
+		/// <returns></returns>
+		public static string MakeRestSharpRequest(RestClientSettings settings)
+		{
+			string content = string.Empty;
+			
+			if (settings != null)
+			{
+				var client = new RestClient(settings.URL);
+				var request = new RestRequest(settings.Method);
+
+				// adds to POST or URL query string based on Method
+				foreach(Parameter parameter in settings.Parameters)
+				{
+					request.AddParameter(parameter);
+				}
+				
+				// execute the request
+				IRestResponse response = client.Execute(request);
+
+				// raw content as string
+				content = response.Content; 
+			}
+
+			return content;
+		}
+		
 		/// <summary>
 		/// Makes the HTTP web request.
 		/// </summary>
@@ -76,7 +108,7 @@ namespace WebApp.Helpers
 			DateTime SessionExpiration = DateTime.UtcNow.AddHours(24);
 
 			//Save user ID cookie
-			HttpCookie authCookie = new HttpCookie(key, value.ToString())
+			System.Web.HttpCookie authCookie = new System.Web.HttpCookie(key, value.ToString())
 			{
 				Expires = SessionExpiration
 			};
@@ -90,7 +122,7 @@ namespace WebApp.Helpers
 		/// <param name="item">The item.</param>
 		public static string ReadCookie(string key)
 		{
-			HttpCookie cookie = HttpContext.Current.Request.Cookies[key];
+			System.Web.HttpCookie cookie = HttpContext.Current.Request.Cookies[key];
 
 			if(cookie != null)
 			{

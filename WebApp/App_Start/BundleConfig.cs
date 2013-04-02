@@ -20,11 +20,18 @@ namespace WebApp
 						"~/Scripts/jquery.validate*",
 						"~/Scripts/custom/bootstrap-error-classes.js"));
 
+			bundles.Add(new ScriptBundle("~/bundles/dataTables").Include(
+						"~/Scripts/jquery.dataTables.js",
+						"~/Scripts/custom/bootstrap-datatable.js"));
+
 			bundles.Add(new ScriptBundle("~/bundles/custom/lab4").Include(
 						"~/Scripts/custom/lab4-functions.js"));
 
 			bundles.Add(new ScriptBundle("~/bundles/custom/lab5").Include(
 						"~/Scripts/custom/lab5-functions.js"));
+
+			bundles.Add(new ScriptBundle("~/bundles/custom/lab7").Include(
+						"~/Scripts/custom/lab7-functions.js"));
 
 			bundles.Add(new ScriptBundle("~/bundles/custom/assignment2").Include(
 						"~/Scripts/jquery.blockUI.js",
@@ -71,6 +78,8 @@ namespace WebApp
 						"~/Content/bootstrap.css",
 						"~/Content/bootstrap-responsive.css",						
 						"~/Content/font-awesome.css"));
+
+			bundles.Add(new StyleBundle("~/Content/datatable").Include("~/Content/bootstrap-datatable.css"));
 		}
 	}
 }

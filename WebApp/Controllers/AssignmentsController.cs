@@ -244,4 +244,4 @@ namespace WebApp.Controllers
 			return response;
 		}
     }
-};
+}

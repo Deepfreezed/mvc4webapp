@@ -10,6 +10,8 @@ using Omu.ValueInjecter;
 using System.Net;
 using System.IO;
 using System.Net.Cache;
+using RestSharp;
+using HtmlAgilityPack;
 
 namespace WebApp.Controllers
 {
@@ -199,5 +201,74 @@ namespace WebApp.Controllers
 		{			
 			return View("Lab6", null);
 		}
-    }
+
+		public ActionResult Lab7()
+		{
+			Lab7ViewModel model = new Lab7ViewModel();
+			RestClientSettings settings = new RestClientSettings();
+
+			settings.URL = "http://www3.mnsu.edu/courses/selectform.asp";
+			settings.Method = Method.POST;
+
+			//add valid header for kicks although they are not looking for it
+			settings.Parameters.Add(new Parameter() { Name = "Accept", Value = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", Type = ParameterType.HttpHeader });
+			settings.Parameters.Add(new Parameter() { Name = "Accept-Encoding", Value = "gzip, deflate", Type = ParameterType.HttpHeader });
+			settings.Parameters.Add(new Parameter() { Name = "Accept-Language", Value = "en-US,en;q=0.5", Type = ParameterType.HttpHeader });
+			settings.Parameters.Add(new Parameter() { Name = "Host", Value = "www3.mnsu.edu", Type = ParameterType.HttpHeader });
+			settings.Parameters.Add(new Parameter() { Name = "Referer", Value = "http://www3.mnsu.edu/courses/", Type = ParameterType.HttpHeader });
+			settings.Parameters.Add(new Parameter() { Name = "User-Agent", Value = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:19.0) Gecko/20100101 Firefox/19.0", Type = ParameterType.HttpHeader });
+
+			// adds to POST or URL query string based on Method
+			settings.Parameters.Add(new Parameter() { Name = "All", Value = "All Sections", Type = ParameterType.GetOrPost });
+			settings.Parameters.Add(new Parameter() { Name = "campus", Value = "1,2,3,4,5,6,7,9,A,B,C,I,L,M,N,P,Q,R,S,T,W,U,V,X,Z", Type = ParameterType.GetOrPost });
+			settings.Parameters.Add(new Parameter() { Name = "college", Value = "", Type = ParameterType.GetOrPost });
+			settings.Parameters.Add(new Parameter() { Name = "courseid", Value = "", Type = ParameterType.GetOrPost });
+			settings.Parameters.Add(new Parameter() { Name = "courselevel", Value = "", Type = ParameterType.GetOrPost });
+			settings.Parameters.Add(new Parameter() { Name = "coursenum", Value = "", Type = ParameterType.GetOrPost });
+			settings.Parameters.Add(new Parameter() { Name = "days", Value = "ALL", Type = ParameterType.GetOrPost });
+			settings.Parameters.Add(new Parameter() { Name = "endTime", Value = "2359", Type = ParameterType.GetOrPost });
+			settings.Parameters.Add(new Parameter() { Name = "semester", Value = "20143Fall 2013", Type = ParameterType.GetOrPost });
+			settings.Parameters.Add(new Parameter() { Name = "startTime", Value = "0600", Type = ParameterType.GetOrPost });
+			settings.Parameters.Add(new Parameter() { Name = "subject", Value = "CS", Type = ParameterType.GetOrPost });
+
+			string content = CommonFunctions.MakeRestSharpRequest(settings);
+
+			HtmlDocument doc = new HtmlDocument();
+			doc.LoadHtml(content);
+
+			HtmlNodeCollection htmlNodes = doc.DocumentNode.SelectNodes("//table[2]/tr");
+
+			Course course;
+			List<Course> courses = new List<Course>();
+			foreach(HtmlNode node in htmlNodes)
+			{
+				if(node.NodeType == HtmlNodeType.Element && node.HasAttributes && node.Attributes["bgcolor"].Value == "#DFE4FF")
+				{
+					course = new Course();
+
+					string[] value = node.InnerText.Trim().Replace("&nbsp;", string.Empty).Split(new string[] { "\r\n\t\t\t" }, StringSplitOptions.RemoveEmptyEntries);
+
+					if(value != null && value.Length == 3)
+					{
+						//Department
+						course.Department = value[0].Trim().Replace(@"&nbsp", string.Empty);
+
+						//courseID and Name
+						string[] courseIDandName = value[1].Split(new string[] { "&#150;" }, StringSplitOptions.None);
+						course.CourseID = courseIDandName[0].Trim();
+						course.CourseName = courseIDandName[1].Trim();
+
+						//Number of credits
+						course.Credits = value[2].Replace("(", string.Empty).Replace(" Credits)", string.Empty).Trim();
+					}
+
+					courses.Add(course);
+				}
+			}
+
+			model.Courses = courses;
+
+			return View("Lab7", model);
+		}
+	}
 }
