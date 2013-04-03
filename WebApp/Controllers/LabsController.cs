@@ -238,13 +238,22 @@ namespace WebApp.Controllers
 
 			HtmlNodeCollection htmlNodes = doc.DocumentNode.SelectNodes("//table[2]/tr");
 
-			Course course;
+			Course course = null;
 			List<Course> courses = new List<Course>();
+			bool readAdditionalInfo = false;
 			foreach(HtmlNode node in htmlNodes)
 			{
 				if(node.NodeType == HtmlNodeType.Element && node.HasAttributes && node.Attributes["bgcolor"].Value == "#DFE4FF")
 				{
+					//Add previously collected course information
+					if(course != null)
+					{
+						courses.Add(course);
+						readAdditionalInfo = false;
+					}
+
 					course = new Course();
+					readAdditionalInfo = true;
 
 					string[] value = node.InnerText.Trim().Replace("&nbsp;", string.Empty).Split(new string[] { "\r\n\t\t\t" }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -261,8 +270,76 @@ namespace WebApp.Controllers
 						//Number of credits
 						course.Credits = value[2].Replace("(", string.Empty).Replace(" Credits)", string.Empty).Trim();
 					}
+				}
+				else if(readAdditionalInfo && node.NodeType == HtmlNodeType.Element && node.HasAttributes && (node.Attributes["bgcolor"].Value == "#E1E1CC" || node.Attributes["bgcolor"].Value == "#FFFFFF"))
+				{
+					//Read Additional information
+					int currentCell = 1;
 
-					courses.Add(course);
+					HtmlNodeCollection htmlTDNodes = node.SelectNodes("td");
+
+					CourseSection section = new CourseSection();
+					foreach(HtmlNode tdNode in htmlTDNodes)
+					{
+						if(node.NodeType == HtmlNodeType.Element && node.HasAttributes)
+						{
+							//Check if there is colspan skipping data blocks
+							if(node.Attributes["colspan"] != null && !string.IsNullOrEmpty(node.Attributes["colspan"].Value))
+							{
+								int columnsSkipped = 0;
+								int.TryParse(node.Attributes["colspan"].Value, out columnsSkipped);
+
+								currentCell = currentCell + columnsSkipped;
+							}
+						}
+
+						string innerText = tdNode.InnerText.Trim();
+						switch(currentCell)
+						{
+							case 1:
+								section.SectionID = innerText;
+								break;
+							case 2:								
+								break;
+							case 3:
+								section.GradeMethod = innerText;
+								break;
+							case 4:
+								section.Days.Add(innerText);
+								break;
+							case 5:
+								section.Time.Add(innerText);
+								break;
+							case 6:
+								section.Dates.Add(innerText);
+								break;
+							case 7:
+								section.Room.Add(innerText);
+								break;
+							case 8:
+								section.Instructor.Add(innerText);
+								break;
+							case 9:
+								int size = 0;
+								int.TryParse(innerText, out size);
+								course.Size = size;
+								break;
+							case 10:
+								int enrolled = 0;
+								int.TryParse(innerText, out enrolled);
+								course.Enrolled = enrolled;
+								break;
+							case 11:
+								course.Status = innerText;
+								break;
+							default:
+								break;
+						}
+
+						currentCell++;
+					}
+
+					course.Sections.Add(section);
 				}
 			}
 

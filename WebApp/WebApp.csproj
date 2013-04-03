@@ -168,6 +168,7 @@
     <Compile Include="Models\Assignment3\Airport.cs" />
     <Compile Include="Helpers\SessionExtender.cs" />
     <Compile Include="Models\Course.cs" />
+    <Compile Include="Models\CourseSection.cs" />
     <Compile Include="Models\RestClientSettings.cs" />
     <Compile Include="ViewModels\Assignment2ViewModel.cs" />
     <Compile Include="ViewModels\Assignment3ViewModel.cs" />

@@ -2,7 +2,7 @@
 @model WebApp.ViewModels.Lab7ViewModel
 
 @{
-    ViewBag.Title = "MSU Course Listings";
+    ViewBag.Title = "MSU IT Course Listings";
 }
 
 @section styles{
@@ -45,9 +45,9 @@
 			            <td>@course.Department&nbsp;@course.CourseID</td>
 			            <td>@course.CourseName</td>
                         <td align="center">@course.Credits</td>
-			            <td>@course.Days</td>
-			            <td>@course.Room</td>
-			            <td>@course.Instructor</td>
+			            <td>@string.Join("<br/>", course.Sections[0].Days.ToArray())</td>
+			            <td>@string.Join("<br/>", course.Sections[0].Room.ToArray())</td>
+			            <td>@string.Join("<br/>", course.Sections[0].Instructor.ToArray())</td>
                         <td>@course.Size</td>
                         <td>@course.Enrolled</td>
 		            </tr>
