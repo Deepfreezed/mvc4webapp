@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace WebApp.Models
+namespace WebApp.Models.CourseListing
 {
-	public class CourseSection
+	public class Section
 	{
-		public CourseSection()
+		public Section()
 		{
 			Days = new List<string>();
 			Time = new List<string>();
@@ -23,5 +23,6 @@ namespace WebApp.Models
 		public List<string> Dates { get; set; }
 		public List<string> Room { get; set; }
 		public List<string> Instructor { get; set; }
+		public int Size { get; set; }
 	}
 }

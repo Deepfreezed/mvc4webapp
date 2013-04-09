@@ -6,8 +6,13 @@ using WebApp.Models.CourseListing;
 
 namespace WebApp.ViewModels
 {
-	public class Lab7ViewModel
+	public class Assignment4ViewModel
 	{
+		public Assignment4ViewModel()
+		{
+			Courses = new List<Course>();
+		}
+
 		public List<Course> Courses { get; set; }
 	}
-}		
+}

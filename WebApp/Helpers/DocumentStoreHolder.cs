@@ -9,6 +9,7 @@ using Raven.Client;
 using Raven.Client.Document;
 using Raven.Client.Indexes;
 using Raven.Client.Embedded;
+using Raven.Database.Server;
 
 namespace WebApp.Helpers
 {
@@ -32,10 +33,12 @@ namespace WebApp.Helpers
 			{
 				Store = new EmbeddableDocumentStore
 				{
-					DataDirectory = "Data",
-					UseEmbeddedHttpServer = false
+					DataDirectory = "Data"
+					//,UseEmbeddedHttpServer = true
 				};
-								
+
+				//NonAdminHttp.EnsureCanListenToWhenInNonAdminContext(8080);
+
 				SetupConventions(Store.Conventions);
 
 				Store.Initialize();

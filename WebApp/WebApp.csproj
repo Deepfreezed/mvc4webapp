@@ -159,19 +159,24 @@
     </Compile>
     <Compile Include="Helpers\Assignment2DataAccess.cs" />
     <Compile Include="Helpers\CommonFunctions.cs" />
+    <Compile Include="Helpers\CourseListingDataAccess.cs" />
     <Compile Include="Helpers\DocumentStoreHolder.cs" />
     <Compile Include="Helpers\ExplicitIndexAttribute.cs" />
+    <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Helpers\Lab4DataAccess.cs" />
     <Compile Include="Helpers\Lab5DataAccess.cs" />
     <Compile Include="Models\Assignment2\MathPractice.cs" />
     <Compile Include="Models\Assignment2\Question.cs" />
     <Compile Include="Models\Assignment3\Airport.cs" />
     <Compile Include="Helpers\SessionExtender.cs" />
-    <Compile Include="Models\Course.cs" />
-    <Compile Include="Models\CourseSection.cs" />
+    <Compile Include="Models\CourseListing\Course.cs" />
+    <Compile Include="Models\CourseListing\Section.cs" />
+    <Compile Include="Models\CourseListing\Department.cs" />
+    <Compile Include="Models\CourseListing\Semester.cs" />
     <Compile Include="Models\RestClientSettings.cs" />
     <Compile Include="ViewModels\Assignment2ViewModel.cs" />
     <Compile Include="ViewModels\Assignment3ViewModel.cs" />
+    <Compile Include="ViewModels\Assignment4ViewModel.cs" />
     <Compile Include="ViewModels\Lab4ViewModel.cs" />
     <Compile Include="Models\LabModels.cs" />
     <Compile Include="Models\LimitedQueue.cs" />
@@ -373,6 +378,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\custom\assignment2-functions.js" />
     <Content Include="Scripts\custom\assignment3-functions.js" />
+    <Content Include="Scripts\custom\assignment4-functions.js" />
     <Content Include="Scripts\custom\bootstrap-error-classes.js" />
     <Content Include="Scripts\custom\bootstrap-datatable.js" />
     <Content Include="Scripts\custom\lab6-functions.js" />
@@ -502,6 +508,7 @@
     <Content Include="Views\Shared\_Layout_Lab6.cshtml" />
     <Content Include="Views\Shared\_Bootstrap_Layout.cshtml" />
     <Content Include="Views\Labs\Lab7.cshtml" />
+    <Content Include="Views\Assignments\Assignment4.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

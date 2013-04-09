@@ -216,6 +216,15 @@ namespace WebApp.Controllers
 			return View("Assignment3", viewModel);
 		}
 
+		public ActionResult Assignment4()
+		{
+			Assignment4ViewModel model = new Assignment4ViewModel();
+			CourseListingDataAccess dataAccess = new CourseListingDataAccess(RavenSession);
+			model.Courses = dataAccess.GetCoursesByDepartmentID("20143Fall 2013", "IT");
+
+			return View("Assignment4", model);
+		}
+
 		/// <summary>
 		/// Assignment3s the make HTTP web request.
 		/// </summary>

@@ -40,6 +40,9 @@ namespace WebApp
 			bundles.Add(new ScriptBundle("~/bundles/custom/assignment3").Include(
 						"~/Scripts/jquery.dataTables.js",
 						"~/Scripts/custom/assignment3-functions.js"));
+
+			bundles.Add(new ScriptBundle("~/bundles/custom/assignment4").Include(
+						"~/Scripts/custom/assignment4-functions.js"));
 			
 			// Use the development version of Modernizr to develop with and learn from. Then, when you're
 			// ready for production, use the build tool at http://modernizr.com to pick only the tests you need.

@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using WebApp.Models.CourseListing;
 
-namespace WebApp.ViewModels
+namespace WebApp.Models.CourseListing
 {
-	public class Lab7ViewModel
+	public class Department
 	{
+		public string Id { get; set; }
+		public string Name { get; set; }
 		public List<Course> Courses { get; set; }
 	}
-}		
+}

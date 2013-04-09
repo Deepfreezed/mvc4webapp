@@ -1,8 +1,8 @@
 ﻿@using WebApp.Models.CourseListing
-@model WebApp.ViewModels.Lab7ViewModel
+@model WebApp.ViewModels.Assignment4ViewModel
 
 @{
-    ViewBag.Title = "MSU IT Course Listings";
+    ViewBag.Title = "MSU Course Listings v 2.0";
 }
 
 @section styles{
@@ -12,7 +12,7 @@
 @section Scripts{
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/dataTables")
-    @Scripts.Render("~/bundles/custom/lab7")
+    @Scripts.Render("~/bundles/custom/assignment4")
 }
 
 <hgroup class="title">
@@ -20,7 +20,7 @@
 </hgroup>
 
 <section>
-    @using(Html.BeginForm("Lab7", "Labs", FormMethod.Post, new { Id = "Lab7Form" }))
+    @using(Html.BeginForm("Assignment4", "Assignments", FormMethod.Post, new { Id = "Assignment4Form" }))
     {
         @Html.AntiForgeryToken()
 		@Html.ValidationSummary(true)
@@ -51,16 +51,7 @@
                         <td>@course.Sections[0].Size</td>
                         <td>@course.Enrolled</td>
 		            </tr>
-                }@*
-		        
-		        <tr class="even gradeC">
-			        <td>Trident</td>
-			        <td>Internet
-				         Explorer 5.0</td>
-			        <td>Win 95+</td>
-			        <td class="center">5</td>
-			        <td class="center">C</td>
-		        </tr>*@
+                }
             </tbody>
         </table>
         @*<a class="btn" href="#"><i class="icon-cog"></i> Default</a>*@
