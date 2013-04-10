@@ -24,5 +24,7 @@ namespace WebApp.Models.CourseListing
 		public List<string> Room { get; set; }
 		public List<string> Instructor { get; set; }
 		public int Size { get; set; }
+		public int Enrolled { get; set; }
+		public string Status { get; set; }
 	}
 }

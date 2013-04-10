@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Text.RegularExpressions;
+using System.Collections.Specialized;
 
 namespace WebApp.Helpers
 {
@@ -53,6 +54,26 @@ namespace WebApp.Helpers
 			}
 
 			return input.Trim();
+		}
+
+		/// <summary>
+		/// Toes the lookup.
+		/// </summary>
+		/// <param name="collection">The collection.</param>
+		/// <returns></returns>
+		public static ILookup<string, string> ToLookup(this NameValueCollection collection)
+		{
+			if(collection == null)
+			{
+				throw new ArgumentNullException("collection");
+			}
+
+			var pairs =
+				from key in collection.Cast<String>()
+				from value in collection.GetValues(key)
+				select new { key, value };
+
+			return pairs.ToLookup(pair => pair.key, pair => pair.value);
 		}
 	}
 }

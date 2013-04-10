@@ -268,7 +268,7 @@ namespace WebApp.Controllers
 
 						//courseID and Name
 						string[] courseIDandName = value[1].Split(new string[] { "&#150;" }, StringSplitOptions.None);
-						course.CourseID = courseIDandName[0].Trim();
+						course.ID = courseIDandName[0].Trim();
 						course.CourseName = courseIDandName[1].Trim();
 
 						//Number of credits
@@ -334,10 +334,10 @@ namespace WebApp.Controllers
 								case 10:
 									int enrolled = 0;
 									int.TryParse(innerText, out enrolled);
-									course.Enrolled = enrolled;
+									section.Enrolled = enrolled;
 									break;
 								case 11:
-									course.Status = innerText;
+									section.Status = innerText;
 									break;
 								default:
 									break;

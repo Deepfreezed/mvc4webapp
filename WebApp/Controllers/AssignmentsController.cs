@@ -216,10 +216,22 @@ namespace WebApp.Controllers
 			return View("Assignment3", viewModel);
 		}
 
-		public ActionResult Assignment4()
+		public ActionResult Assignment4(string refreshData, string reloadData)
 		{
 			Assignment4ViewModel model = new Assignment4ViewModel();
 			CourseListingDataAccess dataAccess = new CourseListingDataAccess(RavenSession);
+
+			if(!string.IsNullOrEmpty(reloadData) && reloadData.Trim() == "1")
+			{
+				dataAccess.DeleteAllCourseData();
+				dataAccess.LoadAllCourseDataToDatabase();
+			}
+
+			if(!string.IsNullOrEmpty(refreshData) && refreshData.Trim() == "1")
+			{
+				dataAccess.LoadAllCourseDataToDatabase();
+			}
+
 			model.Courses = dataAccess.GetCoursesByDepartmentID("20143Fall 2013", "IT");
 
 			return View("Assignment4", model);
