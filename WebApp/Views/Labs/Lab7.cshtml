@@ -49,7 +49,7 @@
 			            <td>@Html.Raw(string.Join("<br/>", course.Sections[0].Room.ToArray()))</td>
 			            <td>@Html.Raw(string.Join("<br/>", course.Sections[0].Instructor.ToArray()))</td>
                         <td>@course.Sections[0].Size</td>
-                        <td>@course.Enrolled</td>
+                        <td>@course.Sections[0].Enrolled</td>
 		            </tr>
                 }@*
 		        
