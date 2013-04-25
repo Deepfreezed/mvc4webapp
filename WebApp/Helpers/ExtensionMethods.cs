@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Text.RegularExpressions;
 using System.Collections.Specialized;
+using Raven.Client;
+using Raven.Json.Linq;
 
 namespace WebApp.Helpers
 {
@@ -74,6 +76,43 @@ namespace WebApp.Helpers
 				select new { key, value };
 
 			return pairs.ToLookup(pair => pair.key, pair => pair.value);
+		}
+
+		/// <summary>
+		/// Adds the cascade delete reference.
+		/// </summary>
+		/// <param name="session">The session.</param>
+		/// <param name="entity">The entity.</param>
+		/// <param name="documentKeys">The document keys.</param>
+		public static void AddCascadeDeleteReference(this IAdvancedDocumentSessionOperations session, object entity, params string[] documentKeys)
+		{
+			var metadata = session.GetMetadataFor(entity);
+			
+			if(metadata == null)
+			{
+				throw new InvalidOperationException("The entity must be tracked in the session before calling this method.");
+			}
+
+			if(documentKeys.Length == 0)
+			{
+				throw new ArgumentException("At least one document key must be specified.");
+			}
+
+			const string metadataKey = "Raven-Cascade-Delete-Documents";
+			RavenJToken token;
+
+			if(!metadata.TryGetValue(metadataKey, out token))
+			{
+				token = new RavenJArray();
+			}				
+
+			var list = (RavenJArray)token;
+			foreach(var documentKey in documentKeys.Where(key => !list.Contains(key)))
+			{
+				list.Add(documentKey);
+			}				
+
+			metadata[metadataKey] = list;
 		}
 	}
 }

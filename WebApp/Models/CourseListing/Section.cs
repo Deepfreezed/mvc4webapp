@@ -16,6 +16,7 @@ namespace WebApp.Models.CourseListing
 			Instructor = new List<string>();
 		}
 
+		public string Id { get; set; }
 		public string SectionID { get; set; }
 		public string GradeMethod { get; set; }
 		public List<string> Days { get; set; }

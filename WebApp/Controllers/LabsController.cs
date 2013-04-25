@@ -264,11 +264,11 @@ namespace WebApp.Controllers
 					if(value != null && value.Length == 3)
 					{
 						//Department
-						course.Department = value[0].Trim().Replace(@"&nbsp", string.Empty);
+						course.DepartmentID = value[0].Trim().Replace(@"&nbsp", string.Empty);
 
 						//courseID and Name
 						string[] courseIDandName = value[1].Split(new string[] { "&#150;" }, StringSplitOptions.None);
-						course.ID = courseIDandName[0].Trim();
+						course.CourseNumber = courseIDandName[0].Trim();
 						course.CourseName = courseIDandName[1].Trim();
 
 						//Number of credits

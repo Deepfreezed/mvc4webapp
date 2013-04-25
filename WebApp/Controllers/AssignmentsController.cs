@@ -229,7 +229,7 @@ namespace WebApp.Controllers
 
 			if(!string.IsNullOrEmpty(refreshData) && refreshData.Trim() == "1")
 			{
-				dataAccess.LoadAllCourseDataToDatabase();
+				dataAccess.DeleteAllCourseData();
 			}
 
 			model.Courses = dataAccess.GetCoursesByDepartmentID("20143Fall 2013", "IT");

@@ -9,11 +9,11 @@ namespace WebApp.Models.CourseListing
 	{
 		public Semester()
 		{
-			Departments = new List<Department>();
+			DepartmentIds = new List<string>();
 		}
 
 		public string Id { get; set; }
 		public string Name { get; set; }
-		public List<Department> Departments { get; set; }
+		public List<string> DepartmentIds { get; set; }
 	}
 }

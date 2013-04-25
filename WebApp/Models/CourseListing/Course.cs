@@ -12,14 +12,15 @@ namespace WebApp.Models.CourseListing
 			Sections = new List<Section>();
 		}
 
-		public string ID { get; set; }
-		public string Department { get; set; }
+		public string Id { get; set; }
+		public string CourseNumber { get; set; }
+		public string DepartmentID { get; set; }
 
 		public string CourseID 
 		{ 
 			get
 			{
-				return string.Format("{0}{1}", Department, ID);
+				return string.Format("{0}{1}", DepartmentID, CourseNumber);
 			}
 		}
 

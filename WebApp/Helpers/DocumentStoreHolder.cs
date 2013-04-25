@@ -10,6 +10,8 @@ using Raven.Client.Document;
 using Raven.Client.Indexes;
 using Raven.Client.Embedded;
 using Raven.Database.Server;
+using Raven.Bundles.CascadeDelete;
+using Raven.Abstractions.Indexing;
 
 namespace WebApp.Helpers
 {
@@ -30,15 +32,16 @@ namespace WebApp.Helpers
 		public static void Initialize()
 		{
 			try
-			{
+			{				
 				Store = new EmbeddableDocumentStore
 				{
 					DataDirectory = "Data"
-					//,UseEmbeddedHttpServer = true
+					,UseEmbeddedHttpServer = true
+					,Configuration = { Catalog = { Catalogs = { new AssemblyCatalog(typeof(CascadeDeleteTrigger).Assembly) }}}
 				};
 
 				//NonAdminHttp.EnsureCanListenToWhenInNonAdminContext(8080);
-
+				
 				SetupConventions(Store.Conventions);
 
 				Store.Initialize();
@@ -105,6 +108,18 @@ namespace WebApp.Helpers
 				default:
 					return false;
 			}
+		}
+	}
+
+	public class AllDocumentsById : AbstractIndexCreationTask
+	{
+		public override IndexDefinition CreateIndexDefinition()
+		{
+			return new IndexDefinition
+			{
+				Name = "AllDocumentsById",
+				Map = "from doc in docs let DocId = doc[\"@metadata\"][\"@id\"] select new {DocId};"
+			};
 		}
 	}
 }

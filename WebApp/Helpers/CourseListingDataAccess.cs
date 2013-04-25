@@ -8,16 +8,39 @@ using HtmlAgilityPack;
 using WebApp.Models.CourseListing;
 using Raven.Client;
 using System.Collections.Specialized;
+using Raven.Abstractions.Data;
 
 namespace WebApp.Helpers
 {
 	public class CourseListingDataAccess
 	{
 		private IDocumentSession m_RavenSession;
+		private string currentSemesterID = string.Empty;
+		private List<string> currentSemesterIDs = new List<string>();
+		private List<string> previousSemestersIDs = new List<string>();
 		
 		public CourseListingDataAccess(IDocumentSession RavenSession)
 		{
 			m_RavenSession = RavenSession;
+
+			//Current Semester
+			currentSemesterID = "20143Fall 2013";
+
+			//Current year past semesters
+			currentSemesterIDs.Add("20141Summer 2013");
+			currentSemesterIDs.Add("20135Spring 2013");
+
+			//Previous year archived Semesters
+			previousSemestersIDs.Add("20133Fall 2012");
+			previousSemestersIDs.Add("20131Summer 2012");
+			previousSemestersIDs.Add("20125Spring 2012");
+			previousSemestersIDs.Add("20123Fall 2011");
+			previousSemestersIDs.Add("20121Summer 2011");
+			previousSemestersIDs.Add("20115Spring 2011");
+			previousSemestersIDs.Add("20113Fall 2010");
+			previousSemestersIDs.Add("20111Summer 2010");
+			previousSemestersIDs.Add("20105Spring 2010");
+			previousSemestersIDs.Add("20103Fall 2009");
 		}
 
 		public Semester GetSemesterByID(string semesterID)
@@ -42,16 +65,16 @@ namespace WebApp.Helpers
 		{
 			List<Course> courses = new List<Course>();
 
-			if(!string.IsNullOrEmpty(semesterID) && !string.IsNullOrEmpty(departmentID))
-			{
-				Semester semester = m_RavenSession.Load<Semester>(semesterID);
-				Department department = semester.Departments.FirstOrDefault(d => d.Id.Equals(departmentID, StringComparison.InvariantCultureIgnoreCase));
+			//if(!string.IsNullOrEmpty(semesterID) && !string.IsNullOrEmpty(departmentID))
+			//{
+			//    Semester semester = m_RavenSession.Load<Semester>(semesterID);
+			//    Department department = semester.Departments.FirstOrDefault(d => d.Id.Equals(departmentID, StringComparison.InvariantCultureIgnoreCase));
 
-				if(department != null && department.Courses.Count > 0)
-				{
-					courses = department.Courses;
-				}					
-			}
+			//    if(department != null && department.Courses.Count > 0)
+			//    {
+			//        courses = department.Courses;
+			//    }					
+			//}
 
 			return courses;
 		}
@@ -95,110 +118,37 @@ namespace WebApp.Helpers
 		/// </summary>
 		public void LoadAllCourseDataToDatabase()
 		{
+			Semester currentSemester = new Semester();
 			List<Semester> previousSemesters = new List<Semester>();
-			Semester currentSemester = m_RavenSession.Load<Semester>("20143Fall 2013");
-			
+
+			//Delete data from database
+			DeleteAllCourseData();
+
+			if(!string.IsNullOrEmpty(currentSemesterID))
+			{
+				string data = RetrieveRawCourseData(currentSemesterID);
+				currentSemester = ParseAndSaveRawCourseData(data, currentSemesterID);				
+			}
+
+			//Current Year semesters
+			foreach(string semesterID in currentSemesterIDs)
+			{
+				string data = RetrieveRawCourseData(semesterID);
+				Semester semester = ParseAndSaveRawCourseData(data, semesterID);
+
+				previousSemesters.Add(semester);
+			}
+
 			//Past Semesters
-			Semester spring2013Semester = m_RavenSession.Load<Semester>("20135Spring 2013");
-			Semester fall2012Semester = m_RavenSession.Load<Semester>("20133Fall 2012");
-			Semester summer2012Semester = m_RavenSession.Load<Semester>("20131Summer 2012");
-			Semester sping2012Semester = m_RavenSession.Load<Semester>("20125Spring 2012");
-			Semester fall2011Semester = m_RavenSession.Load<Semester>("20123Fall 2011");
-			//Semester summer2011Semester = m_RavenSession.Load<Semester>("20121Summer 2011");
-			//Semester spring2011Semester = m_RavenSession.Load<Semester>("20115Spring 2011");
-			//Semester fall2010Semester = m_RavenSession.Load<Semester>("20113Fall 2010");
-			//Semester summer2010Semester = m_RavenSession.Load<Semester>("20111Summer 2010");
-			//Semester spring2010Semester = m_RavenSession.Load<Semester>("20105Spring 2010");
-			//Semester fall2009Semester = m_RavenSession.Load<Semester>("20103Fall 2009");
-											
-			bool recalculateHistoricalData = false;
-			
-			if(currentSemester == null || currentSemester.Departments.Count == 0)
+			foreach(string semesterID in previousSemestersIDs)
 			{
-				string data = RetrieveRawCourseData("20143Fall 2013");
-				currentSemester = ParseRawCourseData(data);
-				currentSemester.Id = "20143Fall 2013";
-				currentSemester.Name = "Fall 2013";
+				string data = RetrieveRawCourseData(semesterID, "http://www3.mnsu.edu/courses/selectformArchive.asp");
+				Semester semester = ParseAndSaveRawCourseData(data, semesterID);
 
-				m_RavenSession.Store(currentSemester);
-				m_RavenSession.SaveChanges();
+				previousSemesters.Add(semester);
 			}
 
-			#region Past Semesters
-			
-			if(spring2013Semester == null || spring2013Semester.Departments.Count == 0)
-			{
-				string data = RetrieveRawCourseData("20135Spring 2013");
-				spring2013Semester = ParseRawCourseData(data);
-				spring2013Semester.Id = "20135Spring 2013";
-				spring2013Semester.Name = "Spring 2013";
-
-				m_RavenSession.Store(spring2013Semester);
-				m_RavenSession.SaveChanges();
-				recalculateHistoricalData = true;
-			}
-			
-			if(fall2012Semester == null || fall2012Semester.Departments.Count == 0)
-			{
-				string data = RetrieveRawCourseData("20133Fall 2012", "http://www3.mnsu.edu/courses/selectformArchive.asp");
-				fall2012Semester = ParseRawCourseData(data);
-				fall2012Semester.Id = "20133Fall 2012";
-				fall2012Semester.Name = "Fall 2012";
-
-				m_RavenSession.Store(fall2012Semester);
-				m_RavenSession.SaveChanges();
-				recalculateHistoricalData = true;
-			}
-
-			if(summer2012Semester == null || summer2012Semester.Departments.Count == 0)
-			{
-				string data = RetrieveRawCourseData("20131Summer 2012", "http://www3.mnsu.edu/courses/selectformArchive.asp");
-				summer2012Semester = ParseRawCourseData(data);
-				summer2012Semester.Id = "20131Summer 2012";
-				summer2012Semester.Name = "Summer 2012";
-
-				m_RavenSession.Store(summer2012Semester);
-				m_RavenSession.SaveChanges();
-				recalculateHistoricalData = true;
-			}
-
-			if(sping2012Semester == null || sping2012Semester.Departments.Count == 0)
-			{
-				string data = RetrieveRawCourseData("20125Spring 2012", "http://www3.mnsu.edu/courses/selectformArchive.asp");
-				sping2012Semester = ParseRawCourseData(data);
-				sping2012Semester.Id = "20125Spring 2012";
-				sping2012Semester.Name = "Spring 2012";
-
-				m_RavenSession.Store(sping2012Semester);
-				m_RavenSession.SaveChanges();
-				recalculateHistoricalData = true;
-			}
-
-			if(fall2011Semester == null || fall2011Semester.Departments.Count == 0)
-			{
-				string data = RetrieveRawCourseData("20123Fall 2011", "http://www3.mnsu.edu/courses/selectformArchive.asp");
-				fall2011Semester = ParseRawCourseData(data);
-				fall2011Semester.Id = "20123Fall 2011";
-				fall2011Semester.Name = "Fall 2011";
-
-				m_RavenSession.Store(fall2011Semester);
-				m_RavenSession.SaveChanges();
-				recalculateHistoricalData = true;
-			}
-			#endregion
-
-			if(recalculateHistoricalData)
-			{
-				previousSemesters.Add(spring2013Semester);
-				previousSemesters.Add(fall2012Semester);
-				previousSemesters.Add(summer2012Semester);
-				previousSemesters.Add(sping2012Semester);
-				previousSemesters.Add(fall2011Semester);
-
-				PopulateHistoricalData(currentSemester, previousSemesters);
-			}
-			
-			//TODO:
+			//PopulateHistoricalData(currentSemester, previousSemesters);
 		}
 
 		/// <summary>
@@ -206,56 +156,19 @@ namespace WebApp.Helpers
 		/// </summary>
 		public void DeleteAllCourseData()
 		{
-			Semester currentSemester = m_RavenSession.Load<Semester>("20143Fall 2013");
-
-			//Past Semesters
-			Semester spring2013Semester = m_RavenSession.Load<Semester>("20135Spring 2013");
-			Semester fall2012Semester = m_RavenSession.Load<Semester>("20133Fall 2012");
-			Semester summer2012Semester = m_RavenSession.Load<Semester>("20131Summer 2012");
-			Semester sping2012Semester = m_RavenSession.Load<Semester>("20125Spring 2012");
-			Semester fall2011Semester = m_RavenSession.Load<Semester>("20123Fall 2011");
-
-			if(currentSemester != null)
-			{
-				m_RavenSession.Delete<Semester>(currentSemester);
-			}
-
-			if(spring2013Semester != null)
-			{
-				m_RavenSession.Delete<Semester>(spring2013Semester);
-			}
-
-			if(fall2012Semester != null)
-			{
-				m_RavenSession.Delete<Semester>(fall2012Semester);
-			}
-
-			if(summer2012Semester != null)
-			{
-				m_RavenSession.Delete<Semester>(summer2012Semester);
-			}
-
-			if(sping2012Semester != null)
-			{
-				m_RavenSession.Delete<Semester>(sping2012Semester);
-			}
-
-			if(fall2011Semester != null)
-			{
-				m_RavenSession.Delete<Semester>(fall2011Semester);
-			}
-
+			m_RavenSession.Advanced.DocumentStore.DatabaseCommands.DeleteByIndex("AllDocumentsById", new IndexQuery());			
 			m_RavenSession.SaveChanges();
 		}
 
 		#region Private Methods
-		
+
 		/// <summary>
 		/// Parses the raw course data.
 		/// </summary>
 		/// <param name="content">The content.</param>
+		/// <param name="semesterID">The semester ID.</param>
 		/// <returns></returns>
-		private Semester ParseRawCourseData(string content)
+		private Semester ParseAndSaveRawCourseData(string content, string semesterID)
 		{
 			HtmlDocument doc = new HtmlDocument();
 			doc.LoadHtml(content);
@@ -290,13 +203,19 @@ namespace WebApp.Helpers
 							if(addNewCourse)
 							{
 								course.Sections.Add(section);
-								courses.Add(course);
+								
+								//Save Course to database
+								m_RavenSession.Store(course);								
+								department.CourseIds.Add(course.Id);
+								
 								readAdditionalInfo = false;
 								addNewCourse = false;
 							}
 
-							department.Courses = courses;
-							semester.Departments.Add(department);
+							//Store Department to database
+							m_RavenSession.Store(department);
+							m_RavenSession.Advanced.AddCascadeDeleteReference(department, department.CourseIds.ToArray());
+							semester.DepartmentIds.Add(department.Id);
 						}
 
 						department = new Department();
@@ -322,11 +241,11 @@ namespace WebApp.Helpers
 
 								if(currentCell == 2 && !string.IsNullOrEmpty(text))
 								{
-									department.Id = text;
+									department.DepartmentID = text;
 								}
 								else if(currentCell == 10 && !string.IsNullOrEmpty(text))
 								{
-									department.Name = text.RemoveValues("Courses", department.Id);
+									department.Name = text.RemoveValues("Courses", department.DepartmentID);
 								}
 							}
 						}
@@ -338,7 +257,10 @@ namespace WebApp.Helpers
 					//Add previously collected course information
 					if(course != null)
 					{
-						courses.Add(course);
+						//Store Course to database
+						m_RavenSession.Store(course);
+						department.CourseIds.Add(course.Id);
+
 						readAdditionalInfo = false;
 						addNewCourse = false;
 					}
@@ -350,11 +272,11 @@ namespace WebApp.Helpers
 						course = new Course();
 
 						//Department
-						course.Department = value[0].Trim().Replace(@"&nbsp", string.Empty);
+						course.DepartmentID = value[0].Trim().Replace(@"&nbsp", string.Empty);
 
 						//courseID and Name
 						string[] courseIDandName = value[1].Split(new string[] { "&#150;" }, StringSplitOptions.None);
-						course.ID = courseIDandName[0].Trim();
+						course.CourseNumber = courseIDandName[0].Trim();
 						course.CourseName = courseIDandName[1].Trim();
 
 						//Number of credits
@@ -460,14 +382,30 @@ namespace WebApp.Helpers
 				if(addNewCourse)
 				{
 					course.Sections.Add(section);
-					courses.Add(course);
+
+					//Store Course to database
+					m_RavenSession.Store(course);
+					department.CourseIds.Add(course.Id);
+					
 					readAdditionalInfo = false;
 					addNewCourse = false;
 				}
 
-				department.Courses = courses;
-				semester.Departments.Add(department);
+				//Store Department to database
+				m_RavenSession.Store(department);
+				m_RavenSession.Advanced.AddCascadeDeleteReference(department, department.CourseIds.ToArray());
+
+				semester.DepartmentIds.Add(department.Id);
 			}
+
+			//Store Semester to database
+			semester.Id = semesterID;
+			semester.Name = semesterID.Remove(0, 4);
+			m_RavenSession.Store(semester);
+			m_RavenSession.Advanced.AddCascadeDeleteReference(semester, semester.DepartmentIds.ToArray());
+
+			//Save changes to database
+			m_RavenSession.SaveChanges();
 
 			return semester;
 		}
@@ -513,7 +451,7 @@ namespace WebApp.Helpers
 			settings.Parameters.Add(new Parameter() { Name = "endTime", Value = "2359", Type = ParameterType.GetOrPost });
 			settings.Parameters.Add(new Parameter() { Name = "semester", Value = semesterID, Type = ParameterType.GetOrPost });
 			settings.Parameters.Add(new Parameter() { Name = "startTime", Value = "0600", Type = ParameterType.GetOrPost });
-			settings.Parameters.Add(new Parameter() { Name = "subject", Value = "IT  INFORMATION TECHNOLOGY", Type = ParameterType.GetOrPost });
+			settings.Parameters.Add(new Parameter() { Name = "subject", Value = "", Type = ParameterType.GetOrPost });
 
 			return CommonFunctions.MakeRestSharpRequest(settings);
 		}
@@ -632,23 +570,23 @@ namespace WebApp.Helpers
 		/// <returns></returns>
 		private Semester PopulateHistoricalData(Semester currentSemester, List<Semester> previousSemesters)
 		{
-			foreach(Department department in currentSemester.Departments)
-			{
-				List<Course> previousSemesterCourses = previousSemesters.SelectMany(s => s.Departments).SelectMany(d => d.Courses).ToList();
+			//foreach(Department department in currentSemester.Departments)
+			//{
+			//    List<Course> previousSemesterCourses = previousSemesters.SelectMany(s => s.Departments).SelectMany(d => d.Courses).ToList();
 
-				foreach(Course course in department.Courses)
-				{
-					List<Section> previousSemesterSections = previousSemesterCourses.Where(c => c.CourseID == course.CourseID).SelectMany(s => s.Sections).ToList();
+			//    foreach(Course course in department.Courses)
+			//    {
+			//        List<Section> previousSemesterSections = previousSemesterCourses.Where(c => c.CourseID == course.CourseID).SelectMany(s => s.Sections).ToList();
 
-					int size = previousSemesterSections.Sum(s => s.Size);
-					int enrolled = previousSemesterSections.Sum(s => s.Enrolled);
+			//        int size = previousSemesterSections.Sum(s => s.Size);
+			//        int enrolled = previousSemesterSections.Sum(s => s.Enrolled);
 
-					course.AddEnrolmentStatics(enrolled, size);
-				}
-			}
+			//        course.AddEnrolmentStatics(enrolled, size);
+			//    }
+			//}
 
-			m_RavenSession.Store(currentSemester);
-			m_RavenSession.SaveChanges();
+			//m_RavenSession.Store(currentSemester);
+			//m_RavenSession.SaveChanges();
 
 			return currentSemester;
 		}
