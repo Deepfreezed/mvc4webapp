@@ -32,15 +32,15 @@ namespace WebApp.Helpers
 
 			//Previous year archived Semesters
 			previousSemestersIDs.Add("20133Fall 2012");
-			previousSemestersIDs.Add("20131Summer 2012");
-			previousSemestersIDs.Add("20125Spring 2012");
-			previousSemestersIDs.Add("20123Fall 2011");
-			previousSemestersIDs.Add("20121Summer 2011");
-			previousSemestersIDs.Add("20115Spring 2011");
-			previousSemestersIDs.Add("20113Fall 2010");
-			previousSemestersIDs.Add("20111Summer 2010");
-			previousSemestersIDs.Add("20105Spring 2010");
-			previousSemestersIDs.Add("20103Fall 2009");
+			//previousSemestersIDs.Add("20131Summer 2012");
+			//previousSemestersIDs.Add("20125Spring 2012");
+			//previousSemestersIDs.Add("20123Fall 2011");
+			//previousSemestersIDs.Add("20121Summer 2011");
+			//previousSemestersIDs.Add("20115Spring 2011");
+			//previousSemestersIDs.Add("20113Fall 2010");
+			//previousSemestersIDs.Add("20111Summer 2010");
+			//previousSemestersIDs.Add("20105Spring 2010");
+			//previousSemestersIDs.Add("20103Fall 2009");
 		}
 
 		public Semester GetSemesterByID(string semesterID)
@@ -400,7 +400,7 @@ namespace WebApp.Helpers
 
 			//Store Semester to database
 			semester.Id = semesterID;
-			semester.Name = semesterID.Remove(0, 4);
+			semester.Name = semesterID.Remove(0, 5);
 			m_RavenSession.Store(semester);
 			m_RavenSession.Advanced.AddCascadeDeleteReference(semester, semester.DepartmentIds.ToArray());
 

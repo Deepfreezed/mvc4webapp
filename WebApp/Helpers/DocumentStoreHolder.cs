@@ -36,7 +36,7 @@ namespace WebApp.Helpers
 				Store = new EmbeddableDocumentStore
 				{
 					DataDirectory = "Data"
-					,UseEmbeddedHttpServer = true
+					//,UseEmbeddedHttpServer = true
 					,Configuration = { Catalog = { Catalogs = { new AssemblyCatalog(typeof(CascadeDeleteTrigger).Assembly) }}}
 				};
 

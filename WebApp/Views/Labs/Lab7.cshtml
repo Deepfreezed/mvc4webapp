@@ -42,7 +42,7 @@
                 @foreach(Course course in Model.Courses)
                 {
                     <tr>
-			            <td>@course.Department&nbsp;@course.CourseID</td>
+			            <td>@course.CourseName&nbsp;@course.CourseID</td>
 			            <td>@course.CourseName</td>
                         <td align="center">@course.Credits</td>
 			            <td>@Html.Raw(string.Join("<br/>", course.Sections[0].Days.ToArray()))</td>
