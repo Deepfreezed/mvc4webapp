@@ -168,10 +168,13 @@
     <Compile Include="Helpers\CommonFunctions.cs" />
     <Compile Include="Helpers\CourseListingDataAccess.cs" />
     <Compile Include="Helpers\DocumentStoreHolder.cs" />
+    <Compile Include="Helpers\EnumerableExtensions.cs" />
     <Compile Include="Helpers\ExplicitIndexAttribute.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Helpers\Lab4DataAccess.cs" />
     <Compile Include="Helpers\Lab5DataAccess.cs" />
+    <Compile Include="Helpers\MvcJsonResult.cs" />
+    <Compile Include="Helpers\MvcXmlResult.cs" />
     <Compile Include="Models\Assignment2\MathPractice.cs" />
     <Compile Include="Models\Assignment2\Question.cs" />
     <Compile Include="Models\Assignment3\Airport.cs" />
@@ -184,6 +187,7 @@
     <Compile Include="ViewModels\Assignment2ViewModel.cs" />
     <Compile Include="ViewModels\Assignment3ViewModel.cs" />
     <Compile Include="ViewModels\Assignment4ViewModel.cs" />
+    <Compile Include="ViewModels\CourseListingViewModel.cs" />
     <Compile Include="ViewModels\Lab4ViewModel.cs" />
     <Compile Include="Models\LabModels.cs" />
     <Compile Include="Models\LimitedQueue.cs" />
@@ -516,6 +520,7 @@
     <Content Include="Views\Shared\_Bootstrap_Layout.cshtml" />
     <Content Include="Views\Labs\Lab7.cshtml" />
     <Content Include="Views\Assignments\Assignment4.cshtml" />
+    <Content Include="Views\Assignments\Assignment5.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

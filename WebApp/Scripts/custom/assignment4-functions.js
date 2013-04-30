@@ -8,7 +8,7 @@ $(document).ready(function () {
 		"bFilter": true,
 		"bSort": true,
 		"bInfo": false,
-		"iDisplayLength": 10,
+		"iDisplayLength": 25,
 		"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>><'top'i>rt<'bottom'lp><'clear'>",
 		"sPaginationType": "bootstrap",
 		"oLanguage": {

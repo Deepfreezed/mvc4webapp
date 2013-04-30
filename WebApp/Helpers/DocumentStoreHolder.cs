@@ -12,6 +12,7 @@ using Raven.Client.Embedded;
 using Raven.Database.Server;
 using Raven.Bundles.CascadeDelete;
 using Raven.Abstractions.Indexing;
+using WebApp.Models.CourseListing;
 
 namespace WebApp.Helpers
 {
@@ -120,6 +121,22 @@ namespace WebApp.Helpers
 				Name = "AllDocumentsById",
 				Map = "from doc in docs let DocId = doc[\"@metadata\"][\"@id\"] select new {DocId};"
 			};
+		}
+	}
+
+	public class DepartmentIndex : AbstractIndexCreationTask<Department>
+	{
+		public DepartmentIndex()
+		{
+			Map = departments => from department in departments select new { department.SemesterID, department.DepartmentID };
+		}
+	}
+
+	public class CourseIndex : AbstractIndexCreationTask<Course>
+	{
+		public CourseIndex()
+		{
+			Map = courses => from course in courses select new { course.SemesterID, course.DepartmentID };
 		}
 	}
 }

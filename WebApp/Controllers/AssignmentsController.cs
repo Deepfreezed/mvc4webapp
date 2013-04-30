@@ -7,6 +7,8 @@ using WebApp.Models.Assignment2;
 using WebApp.Helpers;
 using WebApp.ViewModels;
 using Omu.ValueInjecter;
+using WebApp.Models.CourseListing;
+using Raven.Imports.Newtonsoft.Json;
 
 namespace WebApp.Controllers
 {
@@ -192,6 +194,12 @@ namespace WebApp.Controllers
 			return View("Assignment3", viewModel);
 		}
 
+		/// <summary>
+		/// Assignment3s the specified view model.
+		/// </summary>
+		/// <param name="viewModel">The view model.</param>
+		/// <param name="UseProxy">The use proxy.</param>
+		/// <returns></returns>
 		[HttpPost]
 		[AllowAnonymous]
 		public ActionResult Assignment3(Assignment3ViewModel viewModel, string UseProxy)
@@ -216,11 +224,18 @@ namespace WebApp.Controllers
 			return View("Assignment3", viewModel);
 		}
 
-		public ActionResult Assignment4(string refreshData, string reloadData)
+		/// <summary>
+		/// Assignment4s the specified refresh data.
+		/// </summary>
+		/// <param name="refreshData">The refresh data.</param>
+		/// <param name="reloadData">The reload data.</param>
+		/// <param name="recalculateStats">The recalculate stats.</param>
+		/// <returns></returns>
+		public ActionResult Assignment4(string refreshData, string reloadData, string recalculateStats)
 		{
-			Assignment4ViewModel model = new Assignment4ViewModel();
 			CourseListingDataAccess dataAccess = new CourseListingDataAccess(RavenSession);
-
+			Assignment4ViewModel model = new Assignment4ViewModel();
+			
 			if(!string.IsNullOrEmpty(reloadData) && reloadData.Trim() == "1")
 			{
 				dataAccess.DeleteAllCourseData();
@@ -232,9 +247,69 @@ namespace WebApp.Controllers
 				dataAccess.DeleteAllCourseData();
 			}
 
+			if(!string.IsNullOrEmpty(recalculateStats) && recalculateStats.Trim() == "1")
+			{
+				dataAccess.PopulateHistoricalData();
+			}
+
 			model.Courses = dataAccess.GetCoursesByDepartmentID("20143Fall 2013", "IT");
 
 			return View("Assignment4", model);
+		}
+		
+		/// <summary>
+		/// Assignment5s this instance.
+		/// </summary>
+		/// <returns></returns>
+		public ActionResult Assignment5()
+		{
+			CourseListingDataAccess dataAccess = new CourseListingDataAccess(RavenSession);
+			CourseListingViewModel viewModel = new CourseListingViewModel();
+			
+			//Populate the dropdowns
+			viewModel.Semesters = dataAccess.GetAllSemesters();
+			viewModel.Departments = dataAccess.GetAllDepartmentsBySemesterID("20143Fall 2013"); //TODO: AJAX populate based off semester
+
+			return View("Assignment5", viewModel);
+		}
+
+		/// <summary>
+		/// Assignment5s the specified view model.
+		/// </summary>
+		/// <param name="viewModel">The view model.</param>
+		/// <returns></returns>
+		[HttpPost]
+		[AllowAnonymous]
+		public ActionResult Assignment5(CourseListingViewModel viewModel)
+		{
+			CourseListingDataAccess dataAccess = new CourseListingDataAccess(RavenSession);
+
+			//Populate the dropdowns
+			viewModel.Semesters = dataAccess.GetAllSemesters();
+			viewModel.Departments = dataAccess.GetAllDepartmentsBySemesterID("20143Fall 2013"); //TODO: AJAX populate based off semester
+
+			if(!string.IsNullOrEmpty(viewModel.Semester) && !string.IsNullOrEmpty(viewModel.Department))
+			{
+				viewModel.Courses = dataAccess.GetCoursesByDepartmentID(viewModel.Semester, viewModel.Department);
+			}
+			
+			return View("Assignment5", viewModel);
+		}
+
+		public ActionResult ApiJson()
+		{
+			CourseListingDataAccess dataAccess = new CourseListingDataAccess(RavenSession);
+			MvcJsonResult jsonNetResult = new MvcJsonResult();
+			jsonNetResult.Formatting = Formatting.Indented;
+			jsonNetResult.Data = dataAccess.GetAllSemesters();
+
+			return jsonNetResult;
+		}
+
+		public MvcXmlResult ApiXml()
+		{
+			CourseListingDataAccess dataAccess = new CourseListingDataAccess(RavenSession);
+			return new MvcXmlResult(dataAccess.GetAllSemesters());
 		}
 
 		/// <summary>

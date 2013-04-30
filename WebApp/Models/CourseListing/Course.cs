@@ -15,6 +15,7 @@ namespace WebApp.Models.CourseListing
 		public string Id { get; set; }
 		public string CourseNumber { get; set; }
 		public string DepartmentID { get; set; }
+		public string SemesterID { get; set; }
 
 		public string CourseID 
 		{ 
