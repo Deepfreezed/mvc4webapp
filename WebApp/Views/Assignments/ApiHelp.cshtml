@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Course Listings API Help Page";
+    var queryParams1 = new { SemesterID = "Fall2013", DepartmentID = "IT", CourseID = "100" };
+    var queryParams2 = new { SemesterID = "Fall2013", DepartmentID = "IT" };
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+<br />
+<h5>API Usage:</h5>
+<pre style="color:Purple; font-weight:bold; font-size:large;"> /Assignments/{ApiJson/ApiXml}?SemesterID={value}&DepartmentID={value}&CourseID={value}</pre>
+<pre style="color:Orange; font-weight:bold; font-size:large;"> /Assignments/{ApiJson/ApiXml}/SemesterID/{value}/DepartmentID/{value}/CourseID/{value}/</pre>
+<h6>Json Examples:</h6>
+<pre style="color:Purple; font-weight:bold;"> /Assignments/ApiJson?SemesterID=Fall2013&DepartmentID=IT&CourseID=100 (@Html.ActionLink("try it", "ApiJson", queryParams1))</pre>
+<pre style="color:Purple; font-weight:bold;"> /Assignments/ApiJson/SemesterID/Fall2013/DepartmentID/IT/</pre>
+<h6>Xml Examples:</h6>
+<pre style="color:Orange; font-weight:bold;"> /Assignments/ApiXml?SemesterID=Fall2013&DepartmentID=IT (@Html.ActionLink("try it", "ApiXml", queryParams2))</pre>
+<pre style="color:Orange; font-weight:bold;"> /Assignments/ApiXml/SemesterID/Fall2013/DepartmentID/IT/</pre>

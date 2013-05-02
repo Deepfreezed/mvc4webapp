@@ -57,9 +57,11 @@ namespace WebApp.Helpers
 		/// </summary>
 		/// <param name="semesterID">The semester ID.</param>
 		/// <returns></returns>
-		public List<Department> GetAllDepartmentsBySemesterID(string semesterID)
+		public List<Department> GetAllDepartmentsBySemesterID()
 		{
-			return m_RavenSession.Query<Department>("DepartmentIndex").Where(d => d.SemesterID.Equals(semesterID, StringComparison.InvariantCultureIgnoreCase)).ToList();
+			string semester = currentSemesterID.Remove(0, 5).Replace(" ", string.Empty);
+
+			return m_RavenSession.Query<Department>("DepartmentIndex").Where(d => d.SemesterID.Equals(semester, StringComparison.InvariantCultureIgnoreCase)).ToList();
 		}
 
 		/// <summary>
@@ -90,12 +92,12 @@ namespace WebApp.Helpers
 		}
 
 		/// <summary>
-		/// Gets the courses by department ID.
+		/// Gets the courses by semester ID and department ID.
 		/// </summary>
 		/// <param name="semesterID">The semester ID.</param>
 		/// <param name="departmentID">The department ID.</param>
 		/// <returns></returns>
-		public List<Course> GetCoursesByDepartmentID(string semesterID, string departmentID)
+		public List<Course> GetCoursesBySemesterIDandDepartmentID(string semesterID, string departmentID)
 		{
 			List<Course> courses = new List<Course>();
 
@@ -114,13 +116,36 @@ namespace WebApp.Helpers
 		}
 
 		/// <summary>
+		/// Gets the courses.
+		/// </summary>
+		/// <param name="semesterID">The semester ID.</param>
+		/// <param name="departmentID">The department ID.</param>
+		/// <param name="courseID">The course ID.</param>
+		/// <returns></returns>
+		public List<Course> GetCourses(string semesterID, string departmentID, string courseID)
+		{
+			List<Course> courses = new List<Course>();
+
+			if(!string.IsNullOrEmpty(semesterID) && !string.IsNullOrEmpty(departmentID) && !string.IsNullOrEmpty(courseID))
+			{
+				courses = m_RavenSession.Query<Course>("CourseIndex")
+					.Where(c => 
+						c.SemesterID.Equals(semesterID, StringComparison.InvariantCultureIgnoreCase) && 
+						c.DepartmentID.Equals(departmentID, StringComparison.InvariantCultureIgnoreCase) &&
+						c.CourseNumber.Equals(courseID, StringComparison.InvariantCultureIgnoreCase)).ToList();
+			}
+
+			return courses;
+		}
+
+		/// <summary>
 		/// Gets the course rating by ID.
 		/// </summary>
 		/// <param name="courseID">The course ID.</param>
 		/// <returns></returns>
 		public Rating GetCourseRatingByID(string courseID)
 		{
-			int rating = 1;
+			int rating = 0;
 			RetrieveCourseRatings().TryGetValue(courseID, out rating);
 
 			return (Rating)rating;
@@ -160,15 +185,15 @@ namespace WebApp.Helpers
 
 			if(!string.IsNullOrEmpty(currentSemesterID))
 			{
-				string data = RetrieveRawCourseData(currentSemesterID);
-				currentSemester = ParseAndSaveRawCourseData(data, currentSemesterID);				
+				//string data = RetrieveRawCourseData(currentSemesterID);
+				currentSemester = RetrieveAndSaveSemesterData(currentSemesterID);				
 			}
 
 			//Current Year semesters
 			foreach(string semesterID in currentSemesterIDs)
 			{
-				string data = RetrieveRawCourseData(semesterID);
-				Semester semester = ParseAndSaveRawCourseData(data, semesterID);
+				//string data = RetrieveRawCourseData(semesterID);
+				Semester semester = RetrieveAndSaveSemesterData(semesterID);
 
 				previousSemesters.Add(semester);
 			}
@@ -176,8 +201,8 @@ namespace WebApp.Helpers
 			//Past Semesters
 			foreach(string semesterID in previousSemestersIDs)
 			{
-				string data = RetrieveRawCourseData(semesterID, "http://www3.mnsu.edu/courses/selectformArchive.asp");
-				Semester semester = ParseAndSaveRawCourseData(data, semesterID);
+				//string data = RetrieveRawCourseData(semesterID, "http://www3.mnsu.edu/courses/selectformArchive.asp");
+				Semester semester = RetrieveAndSaveSemesterData(semesterID);
 
 				previousSemesters.Add(semester);
 			}
@@ -191,32 +216,37 @@ namespace WebApp.Helpers
 		/// <param name="currentSemester">The current semester.</param>
 		/// <param name="previousSemesters">The previous semesters.</param>
 		/// <returns></returns>
-		public Semester PopulateHistoricalData()
+		public void PopulateHistoricalData()
 		{
-			//Get Current semester courses
-			Semester currentSemester = m_RavenSession.Include<Semester>(s => s.DepartmentIds).Load<Semester>(currentSemesterID);
-			List<Department> currentDepartments = m_RavenSession.Include<Department>(d => d.CourseIds).Load<Department>(currentSemester.DepartmentIds.ToArray()).ToList();
-			List<Course> currentCourses = m_RavenSession.Load<Course>(currentDepartments.SelectMany(d => d.CourseIds).ToArray()).ToList();
-
 			//Get previous semester courses
-			List<Semester> previousSemesters = m_RavenSession.Include<Semester>(s => s.DepartmentIds).Load<Semester>("20141Summer 2013", "20135Spring 2013", "20133Fall 2012").ToList();
-			List<Department> previousSemesterDepartments = m_RavenSession.Include<Department>(d => d.CourseIds).Load<Department>(previousSemesters.SelectMany(s => s.DepartmentIds).ToArray()).ToList();
-			List<Course> previousSemesterCourses = m_RavenSession.Load<Course>(previousSemesterDepartments.SelectMany(d => d.CourseIds).ToArray()).ToList();
+			List<string> previousSemesterIDs = new List<string>();
+			previousSemesterIDs.AddRange(currentSemesterIDs);
+			previousSemesterIDs.AddRange(previousSemestersIDs);
 
-			foreach(Course course in currentCourses)
+			if(previousSemesterIDs.Count > 0)
 			{
-				List<Section> sections = previousSemesterCourses.Where(c => c.CourseID == course.CourseID).SelectMany(s => s.Sections).ToList();
+				//Get Current semester courses
+				Semester currentSemester = m_RavenSession.Include<Semester>(s => s.DepartmentIds).Load<Semester>(currentSemesterID);
+				List<Department> currentDepartments = m_RavenSession.Include<Department>(d => d.CourseIds).Load<Department>(currentSemester.DepartmentIds.ToArray()).ToList();
+				List<Course> currentCourses = m_RavenSession.Load<Course>(currentDepartments.SelectMany(d => d.CourseIds).ToArray()).ToList();
 
-				int size = sections.Sum(s => s.Size);
-				int enrolled = sections.Sum(s => s.Enrolled);
+				List<Semester> previousSemesters = m_RavenSession.Include<Semester>(s => s.DepartmentIds).Load<Semester>(previousSemesterIDs).ToList();
+				List<Department> previousSemesterDepartments = m_RavenSession.Include<Department>(d => d.CourseIds).Load<Department>(previousSemesters.SelectMany(s => s.DepartmentIds).ToArray()).ToList();
+				List<Course> previousSemesterCourses = m_RavenSession.Load<Course>(previousSemesterDepartments.SelectMany(d => d.CourseIds).ToArray()).ToList();
 
-				course.AddEnrolmentStatics(enrolled, size);
+				foreach(Course course in currentCourses)
+				{
+					List<Section> sections = previousSemesterCourses.Where(c => c.CourseID == course.CourseID).SelectMany(s => s.Sections).ToList();
+
+					int size = sections.Sum(s => s.Size);
+					int enrolled = sections.Sum(s => s.Enrolled);
+
+					course.AddEnrolmentStatics(enrolled, size);
+				}
+
+				m_RavenSession.Store(currentCourses);
+				m_RavenSession.SaveChanges();
 			}
-
-			m_RavenSession.Store(currentCourses);
-			m_RavenSession.SaveChanges();
-
-			return currentSemester;
 		}
 
 		/// <summary>
@@ -231,106 +261,146 @@ namespace WebApp.Helpers
 		#region Private Methods
 
 		/// <summary>
+		/// Retrieves the and save semester data.
+		/// </summary>
+		/// <param name="semesterID">The semester ID.</param>
+		/// <returns></returns>
+		private Semester RetrieveAndSaveSemesterData(string semesterID)
+		{
+			Semester semester = new Semester();
+			semester.Id = semesterID.Remove(0, 5).Replace(" ", string.Empty);
+			semester.Name = semesterID.Remove(0, 5);
+
+			Dictionary<string, string> departmentsValues = RetrieveDepartmentList();
+
+			foreach(KeyValuePair<string, string> departmentValue in departmentsValues)
+			{
+				Department department = new Department();
+				department.DepartmentID = departmentValue.Key;
+				department.Name = departmentValue.Value;
+				department.SemesterID = semester.Id;
+
+				string content = RetrieveRawCourseData(semesterID, department.DepartmentID);
+
+				ParseRawCourseData(content, department);
+
+				//Store Department to database
+				if(department.CourseIds.Count > 0)
+				{
+					m_RavenSession.Store(department);
+					m_RavenSession.Advanced.AddCascadeDeleteReference(department, department.CourseIds.ToArray());
+					semester.DepartmentIds.Add(department.Id);
+				}				
+			}
+
+			//Store Semester to database			
+			m_RavenSession.Store(semester);
+			m_RavenSession.Advanced.AddCascadeDeleteReference(semester, semester.DepartmentIds.ToArray());
+
+			//Save changes to database
+			m_RavenSession.SaveChanges();
+
+			return semester;
+		}
+
+		/// <summary>
 		/// Parses the raw course data.
 		/// </summary>
 		/// <param name="content">The content.</param>
 		/// <param name="semesterID">The semester ID.</param>
 		/// <returns></returns>
-		private Semester ParseAndSaveRawCourseData(string content, string semesterID)
+		private Department ParseRawCourseData(string content, Department department)
 		{
 			HtmlDocument doc = new HtmlDocument();
 			doc.LoadHtml(content);
+			
+			HtmlNodeCollection htmlNodes = doc.DocumentNode.SelectNodes("//table[2]/tr");			
 
-			HtmlNodeCollection htmlNodes = doc.DocumentNode.SelectNodes("//table[2]/tr");
-
-			Semester semester = new Semester();
-			Department department = null;
+			//Department department = null;
 			Course course = null;
 			Section section = null;
-			//List<Course> courses = new List<Course>();
 			bool readAdditionalInfo = false;
 			bool addNewCourse = false;
 
 			if(htmlNodes == null || htmlNodes.Count == 0)
 			{
-				return semester;
+				return department;
 			}
 
 			foreach(HtmlNode node in htmlNodes)
 			{
-				if(node.NodeType == HtmlNodeType.Element && node.HasAttributes && node.Attributes["bgcolor"].Value == "#CCCCCC")
-				{
-					HtmlNodeCollection htmlTDNodes = node.SelectNodes("td");
+				//if(node.NodeType == HtmlNodeType.Element && node.HasAttributes && node.Attributes["bgcolor"].Value == "#CCCCCC")
+				//{
+				//    HtmlNodeCollection htmlTDNodes = node.SelectNodes("td");
 
-					//Departments row has 2 table cells
-					if(htmlTDNodes.Count == 2)
-					{
-						//Add previously collected course information
-						if(department != null)
-						{
-							if(addNewCourse)
-							{
-								course.Sections.Add(section);
+				//    //Departments row has 2 table cells
+				//    if(htmlTDNodes.Count == 2)
+				//    {
+				//        //Add previously collected course information
+				//        if(department != null)
+				//        {
+				//            if(addNewCourse)
+				//            {
+				//                course.Sections.Add(section);
 								
-								//Save Course to database
-								m_RavenSession.Store(course);								
-								department.CourseIds.Add(course.Id);
+				//                //Save Course to database
+				//                m_RavenSession.Store(course);								
+				//                department.CourseIds.Add(course.Id);
 								
-								readAdditionalInfo = false;
-								addNewCourse = false;
-							}
+				//                readAdditionalInfo = false;
+				//                addNewCourse = false;
+				//            }
 
-							//Store Department to database
-							m_RavenSession.Store(department);
-							m_RavenSession.Advanced.AddCascadeDeleteReference(department, department.CourseIds.ToArray());
-							semester.DepartmentIds.Add(department.Id);
-						}
+				//            //Store Department to database
+				//            //m_RavenSession.Store(department);
+				//            //m_RavenSession.Advanced.AddCascadeDeleteReference(department, department.CourseIds.ToArray());
+				//            //semester.DepartmentIds.Add(department.Id);
+				//        }
 
-						department = new Department();
-						department.SemesterID = semesterID;
-						course = null;
-						section = null;
-						//courses = new List<Course>();
-					}
-					else
-					{
-						continue;
-					}
+				//        department = new Department();
+				//        //department.SemesterID = semester.Id;
+				//        course = null;
+				//        section = null;
+				//    }
+				//    else
+				//    {
+				//        continue;
+				//    }
 
-					foreach(HtmlNode tdNode in htmlTDNodes)
-					{
-						if(tdNode.NodeType == HtmlNodeType.Element && tdNode.HasAttributes)
-						{
-							//Check if there is colspan skipping data blocks
-							if(tdNode.Attributes["colspan"] != null && !string.IsNullOrEmpty(tdNode.Attributes["colspan"].Value))
-							{
-								int currentCell;
-								int.TryParse(tdNode.Attributes["colspan"].Value, out currentCell);
-								string text = tdNode.InnerText.CleanHTMLSpecialCharacters();
+				//    foreach(HtmlNode tdNode in htmlTDNodes)
+				//    {
+				//        if(tdNode.NodeType == HtmlNodeType.Element && tdNode.HasAttributes)
+				//        {
+				//            //Check if there is colspan skipping data blocks
+				//            if(tdNode.Attributes["colspan"] != null && !string.IsNullOrEmpty(tdNode.Attributes["colspan"].Value))
+				//            {
+				//                int currentCell;
+				//                int.TryParse(tdNode.Attributes["colspan"].Value, out currentCell);
+				//                string text = tdNode.InnerText.CleanHTMLSpecialCharacters();
 
-								if(currentCell == 2 && !string.IsNullOrEmpty(text))
-								{
-									department.DepartmentID = text;
-								}
-								else if(currentCell == 10)
-								{
-									if(!string.IsNullOrEmpty(text))
-									{
-										department.Name = text.RemoveValues("Courses").ToUpper();
-									}
+				//                if(currentCell == 2 && !string.IsNullOrEmpty(text))
+				//                {
+				//                    department.DepartmentID = text;
+				//                }
+				//                else if(currentCell == 10)
+				//                {
+				//                    if(!string.IsNullOrEmpty(text))
+				//                    {
+				//                        department.Name = text.RemoveValues("Courses").ToUpper();
+				//                    }
 									
-									//If Department is empty, give it department ID
-									if(string.IsNullOrEmpty(department.Name))
-									{
-										department.Name = department.DepartmentID;
-									}
-								}
-							}
-						}
-					}
+				//                    //If Department is empty, give it department ID
+				//                    if(string.IsNullOrEmpty(department.Name))
+				//                    {
+				//                        department.Name = department.DepartmentID;
+				//                    }
+				//                }
+				//            }
+				//        }
+				//    }
 
-				}
-				else if(node.NodeType == HtmlNodeType.Element && node.HasAttributes && node.Attributes["bgcolor"].Value == "#DFE4FF")
+				//}
+				if(node.NodeType == HtmlNodeType.Element && node.HasAttributes && node.Attributes["bgcolor"].Value == "#DFE4FF")
 				{
 					//Add previously collected course information
 					if(course != null)
@@ -341,6 +411,7 @@ namespace WebApp.Helpers
 
 						readAdditionalInfo = false;
 						addNewCourse = false;
+						course = null;
 					}
 
 					string[] value = node.InnerText.Trim().Replace("&nbsp;", string.Empty).Split(new string[] { "\r\n\t\t\t" }, StringSplitOptions.RemoveEmptyEntries);
@@ -348,7 +419,7 @@ namespace WebApp.Helpers
 					if(value != null && value.Length == 3)
 					{
 						course = new Course();
-						course.SemesterID = semesterID;
+						course.SemesterID = department.SemesterID;
 
 						//Department
 						course.DepartmentID = value[0].Trim().Replace(@"&nbsp", string.Empty);
@@ -444,6 +515,11 @@ namespace WebApp.Helpers
 								if(columnsSkipped == 0)
 								{
 									course.Sections.Add(section);
+									section = null;
+								}
+								else if(columnsSkipped == 12)
+								{
+									course.AdditionalNotes.Add(innerText);
 								}
 								break;
 							default:
@@ -460,7 +536,11 @@ namespace WebApp.Helpers
 			{
 				if(addNewCourse)
 				{
-					course.Sections.Add(section);
+					if(section != null)
+					{
+						course.Sections.Add(section);
+						section = null;
+					}					
 
 					//Store Course to database
 					m_RavenSession.Store(course);
@@ -468,35 +548,32 @@ namespace WebApp.Helpers
 					
 					readAdditionalInfo = false;
 					addNewCourse = false;
+					course = null;
 				}
 
 				//Store Department to database
-				m_RavenSession.Store(department);
-				m_RavenSession.Advanced.AddCascadeDeleteReference(department, department.CourseIds.ToArray());
+				//m_RavenSession.Store(department);
+				//m_RavenSession.Advanced.AddCascadeDeleteReference(department, department.CourseIds.ToArray());
 
-				semester.DepartmentIds.Add(department.Id);
+				//semester.DepartmentIds.Add(department.Id);
 			}
 
-			//Store Semester to database
-			semester.Id = semesterID;
-			semester.Name = semesterID.Remove(0, 5);
-			m_RavenSession.Store(semester);
-			m_RavenSession.Advanced.AddCascadeDeleteReference(semester, semester.DepartmentIds.ToArray());
+			//Store Semester to database			
+			//m_RavenSession.Store(semester);
+			//m_RavenSession.Advanced.AddCascadeDeleteReference(semester, semester.DepartmentIds.ToArray());
 
-			//Save changes to database
-			m_RavenSession.SaveChanges();
-
-			return semester;
+			return department;
 		}
 
 		/// <summary>
-		/// Retrieves the course data.
+		/// Retrieves the raw course data.
 		/// </summary>
 		/// <param name="semesterID">The semester ID.</param>
+		/// <param name="departmentID">The department ID.</param>
 		/// <returns></returns>
-		private string RetrieveRawCourseData(string semesterID)
+		private string RetrieveRawCourseData(string semesterID, string departmentID)
 		{
-			return RetrieveRawCourseData(semesterID, "http://www3.mnsu.edu/courses/selectform.asp");
+			return RetrieveRawCourseData(semesterID, departmentID, "http://www3.mnsu.edu/courses/selectform.asp");
 		}
 
 		/// <summary>
@@ -504,7 +581,7 @@ namespace WebApp.Helpers
 		/// </summary>
 		/// <param name="semesterID">The semester ID.</param>
 		/// <returns></returns>
-		private string RetrieveRawCourseData(string semesterID, string courseDataURL)
+		private string RetrieveRawCourseData(string semesterID, string departmentID, string courseDataURL)
 		{
 			RestClientSettings settings = new RestClientSettings();
 
@@ -530,7 +607,7 @@ namespace WebApp.Helpers
 			settings.Parameters.Add(new Parameter() { Name = "endTime", Value = "2359", Type = ParameterType.GetOrPost });
 			settings.Parameters.Add(new Parameter() { Name = "semester", Value = semesterID, Type = ParameterType.GetOrPost });
 			settings.Parameters.Add(new Parameter() { Name = "startTime", Value = "0600", Type = ParameterType.GetOrPost });
-			settings.Parameters.Add(new Parameter() { Name = "subject", Value = "", Type = ParameterType.GetOrPost });
+			settings.Parameters.Add(new Parameter() { Name = "subject", Value = departmentID, Type = ParameterType.GetOrPost });
 
 			return CommonFunctions.MakeRestSharpRequest(settings);
 		}
@@ -595,52 +672,146 @@ namespace WebApp.Helpers
 		{
 			Dictionary<string, int> ratings = new Dictionary<string, int>()
 			{				
-				{ "IT201", 3},
-				{ "IT202", 3},
-				{ "IT219", 3},
-				{ "IT310", 3},
-				{ "IT311", 2},
-				{ "IT320", 2},
-				{ "IT321", 3},
-				{ "IT412", 3},
-				{ "IT414", 3},
-				{ "IT430", 3},
-				{ "IT432", 3},
-				{ "IT440", 3},
-				{ "IT442", 3},
-				{ "IT444", 3},
-				{ "IT450", 3},
-				{ "IT460", 3},
-				{ "IT462", 3},
+				{ "IT201", 2},
+				{ "IT202", 2},
+				{ "IT219", 2},
+				{ "IT310", 2},
+				{ "IT311", 1},
+				{ "IT320", 1},
+				{ "IT321", 2},
+				{ "IT412", 2},
+				{ "IT414", 2},
+				{ "IT430", 2},
+				{ "IT432", 2},
+				{ "IT440", 2},
+				{ "IT442", 2},
+				{ "IT444", 2},
+				{ "IT450", 2},
+				{ "IT460", 2},
+				{ "IT462", 2},
 				{ "IT480", 2},
 				{ "IT482", 2},
-				{ "IT486", 3},
-				{ "IT488", 3},
-				{ "IT512", 3},
-				{ "IT514", 3},
-				{ "IT530", 3},
-				{ "IT532", 3},
-				{ "IT544", 3},
-				{ "IT550", 3},
-				{ "IT564", 3},
+				{ "IT486", 2},
+				{ "IT488", 2},
+				{ "IT512", 2},
+				{ "IT514", 2},
+				{ "IT530", 2},
+				{ "IT532", 2},
+				{ "IT544", 2},
+				{ "IT550", 2},
+				{ "IT564", 2},
 				{ "IT580", 2},
-				{ "IT582", 3},
-				{ "IT583", 2},
-				{ "IT584", 3},
-				{ "IT600", 2},
-				{ "IT601", 2},
-				{ "IT602", 2},
-				{ "IT630", 3},
-				{ "IT640", 3},
-				{ "IT641", 2},
-				{ "IT662", 2},
-				{ "IT680", 2},
-				{ "IT690", 3}
+				{ "IT582", 2},
+				{ "IT583", 1},
+				{ "IT584", 2},
+				{ "IT600", 1},
+				{ "IT601", 1},
+				{ "IT602", 1},
+				{ "IT630", 2},
+				{ "IT640", 2},
+				{ "IT641", 1},
+				{ "IT662", 1},
+				{ "IT680", 1},
+				{ "IT690", 2}
 			};
 
 			return ratings;
 		}
 
+		/// <summary>
+		/// Retrieves the department list.
+		/// </summary>
+		/// <returns></returns>
+		private Dictionary<string, string> RetrieveDepartmentList()
+		{
+			Dictionary<string, string> departmentList = new Dictionary<string, string>()
+			{
+				{"ACCT","Accounting"},
+				{"AET","Automotive Engineering Technology"},
+				{"AIS","American Indian Studies"},
+				{"ANTH","Anthropology"},
+				{"ART","Art"},
+				{"AST","Astronomy"},
+				{"AVIA","Aviation Management"},
+				{"BED","Business and Technology Education"},
+				{"BIOL","Biology"},
+				{"BLAW","Business Law"},
+				{"CDIS","Communication Disorders"},
+				{"CHEM","Chemistry"},
+				{"CIVE","Civil Engineering"},
+				{"CM","Construction Management"},
+				{"CMST","Communication Studies"},
+				{"CORR","Corrections"},
+				{"CS","Computer Science"},
+				{"CSP","Counseling and Student Personnel"},
+				{"DANC","Dance"},
+				{"DHYG","Dental Hygiene"},
+				{"ECON","Economics"},
+				{"ED","Education"},
+				{"EDAD","Educational Administration"},
+				{"EDLD","Educational Leadership"},
+				{"EE","Electrical Engineering"},
+				{"EEC","Educational Studies: Elementary and Early Childhood"},
+				{"EET","Electronic Engineering Technology"},
+				{"ENG","English"},
+				{"ENVR","Environmental Sciences"},
+				{"ESL","English as a Second Language"},
+				{"ETHN","Ethnic Studies"},
+				{"EXED","Experiential Education"},
+				{"FCS","Family Consumer Science"},
+				{"FINA","Finance"},
+				{"FREN","French"},
+				{"FYEX","First Year Experience"},
+				{"GEOG","Geography"},
+				{"GEOL","Geology"},
+				{"GER","German"},
+				{"GERO","Gerontology"},
+				{"GWS","Gender and Women's Studies"},
+				{"HIST","History"},
+				{"HLTH","Health Science"},
+				{"HONR","Honors Program"},
+				{"HP","Human Performance"},
+				{"HUM","Humanities"},
+				{"IBUS","International Business"},
+				{"ISYS","Information Systems"},
+				{"IT","Information Technology"},
+				{"KSP","Educational Studies: K-12 and Secondary Programs"},
+				{"LATN","Latin"},
+				{"LAWE","Law Enforcement"},
+				{"MASS","Mass Communications"},
+				{"MATH","Mathematics"},
+				{"MBA","Master of Business Administration"},
+				{"ME","Mechanical Engineering"},
+				{"MEDT","Medical Technology"},
+				{"MET","Manufacturing Engineering Technology"},
+				{"MGMT","Management"},
+				{"MODL","Modern Languages"},
+				{"MRKT","Marketing"},
+				{"MSL","Military Science"},
+				{"MUS","Music"},
+				{"NPL","Nonprofit Leadership"},
+				{"NURS","Nursing"},
+				{"OPEN","Open Studies"},
+				{"PHIL","Philosophy"},
+				{"PHYS","Physics"},
+				{"POL","Political Science"},
+				{"PSYC","Psychology"},
+				{"REHB","Rehabilitation Counseling"},
+				{"RPLS","Recreation  Parks and Liesure Services"},
+				{"RUSS","Russian"},
+				{"SCAN","Scandinavian Studies"},
+				{"SOC","Sociology"},
+				{"SOST","Social Studies"},
+				{"SOWK","Social Work"},
+				{"SPAN","Spanish"},
+				{"SPED","Special Education"},
+				{"STAT","Statistics"},
+				{"THEA","Theatre"},
+				{"URBS","Urban and Regional Studies"}
+			};
+
+			return departmentList;
+		}
 		#endregion		
 	}
 }

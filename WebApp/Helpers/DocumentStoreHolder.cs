@@ -136,7 +136,7 @@ namespace WebApp.Helpers
 	{
 		public CourseIndex()
 		{
-			Map = courses => from course in courses select new { course.SemesterID, course.DepartmentID };
+			Map = courses => from course in courses select new { course.SemesterID, course.DepartmentID, course.CourseNumber };
 		}
 	}
 }

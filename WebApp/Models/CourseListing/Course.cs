@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Xml.Serialization;
 
 namespace WebApp.Models.CourseListing
 {	
@@ -10,6 +11,7 @@ namespace WebApp.Models.CourseListing
 		public Course()
 		{
 			Sections = new List<Section>();
+			AdditionalNotes = new List<string>();
 		}
 
 		public string Id { get; set; }
@@ -26,8 +28,8 @@ namespace WebApp.Models.CourseListing
 		}
 
 		public string CourseName { get; set; }		
-		public string Credits { get; set; }	
-		public string AdditionalNotes { get; set; }
+		public string Credits { get; set; }
+		public List<string> AdditionalNotes { get; set; }
 		public List<Section> Sections { get; set; }
 		public List<string> Prerequisites { get; set; }
 		public Rating CourseRating { get; set; }
@@ -63,11 +65,11 @@ namespace WebApp.Models.CourseListing
 			TotalSize = TotalSize + size;
 		}
 	}
-
+		
 	public enum Rating
-	{
-		NORMAL = 1,
-		HOT = 2,
-		HOTTEST = 3
+	{		
+		NORMAL = 0,
+		HOT = 1,
+		HOTTEST = 2
 	}
 }

@@ -27,7 +27,7 @@
 		@Html.ValidationSummary(true)
 
         <fieldset style="padding-bottom:10px;">
-            <legend>Search MSU Courses</legend>
+            <legend>Search MSU Courses (or use @Html.ActionLink("API", "ApiHelp"))</legend>
             <div class="control-group">
                 @Html.LabelFor(m => m.Semester, new { @class = "control-label" })
                 <div class="controls">
@@ -54,13 +54,15 @@
         <thead>
 		    <tr>			
                 <th></th>        
-			    <th>Course ID</th>
-                <th>Credits</th>
+			    <th>Sec. ID</th>
+                <th>Grd</th>
 			    <th>Days</th>
+                <th>Time</th>
+                <th>Dates</th>
 			    <th>Room</th>
 			    <th>Instructor</th>
                 <th>Size</th>
-                <th>Enrolled</th>
+                <th>Enrl</th>
                 <th>Status</th>
 		    </tr>
 	    </thead>
@@ -103,6 +105,8 @@
                         <td>@Html.Raw(section.SectionID)</td>
                         <td>@Html.Raw(section.GradeMethod)</td>		               
 			            <td>@Html.Raw(string.Join("<br/>", section.Days.ToArray()))</td>
+                        <td>@Html.Raw(string.Join("<br/>", section.Time.ToArray()))</td>
+                        <td>@Html.Raw(string.Join("<br/>", section.Dates.ToArray()))</td>
 			            <td>@Html.Raw(string.Join("<br/>", section.Room.ToArray()))</td>
 			            <td>@Html.Raw(string.Join("<br/>", section.Instructor.ToArray()))</td>
                         <td>@Html.Raw(section.Size)</td>

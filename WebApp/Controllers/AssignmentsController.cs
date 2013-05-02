@@ -231,18 +231,17 @@ namespace WebApp.Controllers
 		/// <param name="reloadData">The reload data.</param>
 		/// <param name="recalculateStats">The recalculate stats.</param>
 		/// <returns></returns>
-		public ActionResult Assignment4(string refreshData, string reloadData, string recalculateStats)
+		public ActionResult Assignment4(string reloadData, string recalculateStats, string deleteData)
 		{
 			CourseListingDataAccess dataAccess = new CourseListingDataAccess(RavenSession);
 			Assignment4ViewModel model = new Assignment4ViewModel();
 			
 			if(!string.IsNullOrEmpty(reloadData) && reloadData.Trim() == "1")
-			{
-				dataAccess.DeleteAllCourseData();
+			{				
 				dataAccess.LoadAllCourseDataToDatabase();
 			}
 
-			if(!string.IsNullOrEmpty(refreshData) && refreshData.Trim() == "1")
+			if(!string.IsNullOrEmpty(deleteData) && deleteData.Trim() == "1")
 			{
 				dataAccess.DeleteAllCourseData();
 			}
@@ -252,7 +251,7 @@ namespace WebApp.Controllers
 				dataAccess.PopulateHistoricalData();
 			}
 
-			model.Courses = dataAccess.GetCoursesByDepartmentID("20143Fall 2013", "IT");
+			model.Courses = dataAccess.GetCoursesBySemesterIDandDepartmentID("20143Fall 2013", "IT");
 
 			return View("Assignment4", model);
 		}
@@ -268,7 +267,7 @@ namespace WebApp.Controllers
 			
 			//Populate the dropdowns
 			viewModel.Semesters = dataAccess.GetAllSemesters();
-			viewModel.Departments = dataAccess.GetAllDepartmentsBySemesterID("20143Fall 2013"); //TODO: AJAX populate based off semester
+			viewModel.Departments = dataAccess.GetAllDepartmentsBySemesterID(); //TODO: AJAX populate based off semester
 
 			return View("Assignment5", viewModel);
 		}
@@ -286,30 +285,120 @@ namespace WebApp.Controllers
 
 			//Populate the dropdowns
 			viewModel.Semesters = dataAccess.GetAllSemesters();
-			viewModel.Departments = dataAccess.GetAllDepartmentsBySemesterID("20143Fall 2013"); //TODO: AJAX populate based off semester
+			viewModel.Departments = dataAccess.GetAllDepartmentsBySemesterID(); //TODO: AJAX populate based off semester
 
 			if(!string.IsNullOrEmpty(viewModel.Semester) && !string.IsNullOrEmpty(viewModel.Department))
 			{
-				viewModel.Courses = dataAccess.GetCoursesByDepartmentID(viewModel.Semester, viewModel.Department);
+				viewModel.Courses = dataAccess.GetCoursesBySemesterIDandDepartmentID(viewModel.Semester, viewModel.Department);
 			}
 			
 			return View("Assignment5", viewModel);
 		}
 
-		public ActionResult ApiJson()
+		/// <summary>
+		/// APIs the json.
+		/// </summary>
+		/// <param name="actionModel">The action model.</param>
+		/// <param name="semesterID">The semester ID.</param>
+		/// <param name="departmentID">The department ID.</param>
+		/// <param name="courseID">The course ID.</param>
+		/// <returns></returns>
+		[ParsePath]
+		public ActionResult ApiJson(string semesterID, string departmentID, string courseID)
 		{
-			CourseListingDataAccess dataAccess = new CourseListingDataAccess(RavenSession);
-			MvcJsonResult jsonNetResult = new MvcJsonResult();
-			jsonNetResult.Formatting = Formatting.Indented;
-			jsonNetResult.Data = dataAccess.GetAllSemesters();
+			if(!string.IsNullOrEmpty(semesterID) && !string.IsNullOrEmpty(departmentID))
+			{
+				List<Course> courses = new List<Course>();
+				CourseListingDataAccess dataAccess = new CourseListingDataAccess(RavenSession);
+				
+				if (string.IsNullOrEmpty(courseID))
+				{
+					courses = dataAccess.GetCoursesBySemesterIDandDepartmentID(semesterID, departmentID);
+				}
+				else
+				{
+					courses = dataAccess.GetCourses(semesterID, departmentID, courseID);
+				}
+				
 
-			return jsonNetResult;
+				MvcJsonResult jsonNetResult = new MvcJsonResult();
+				jsonNetResult.Formatting = Formatting.Indented;
+				jsonNetResult.Data = courses;
+
+				return jsonNetResult;
+			}
+			else
+			{
+				return RedirectToAction("ApiHelp", "Assignments");
+			}			
 		}
 
-		public MvcXmlResult ApiXml()
+		/// <summary>
+		/// APIs the XML.
+		/// </summary>
+		/// <param name="actionModel">The action model.</param>
+		/// <param name="semesterID">The semester ID.</param>
+		/// <param name="departmentID">The department ID.</param>
+		/// <param name="courseID">The course ID.</param>
+		/// <returns></returns>
+		[ParsePath]
+		public ActionResult ApiXml(string semesterID, string departmentID, string courseID)
+		{
+			if(!string.IsNullOrEmpty(semesterID) && !string.IsNullOrEmpty(departmentID))
+			{
+				List<Course> courses = new List<Course>();
+				CourseListingDataAccess dataAccess = new CourseListingDataAccess(RavenSession);
+
+				if(string.IsNullOrEmpty(courseID))
+				{
+					courses = dataAccess.GetCoursesBySemesterIDandDepartmentID(semesterID, departmentID);
+				}
+				else
+				{
+					courses = dataAccess.GetCourses(semesterID, departmentID, courseID);
+				}
+
+				return new MvcXmlResult(courses);
+			}
+			else
+			{
+				return RedirectToAction("ApiHelp", "Assignments");
+			}	
+		}
+
+		/// <summary>
+		/// Reloads the data.
+		/// </summary>
+		/// <returns></returns>
+		public ActionResult ReloadData()
 		{
 			CourseListingDataAccess dataAccess = new CourseListingDataAccess(RavenSession);
-			return new MvcXmlResult(dataAccess.GetAllSemesters());
+
+			dataAccess.LoadAllCourseDataToDatabase();
+
+			return RedirectToAction("Assignment5", "Assignments");
+		}
+
+		/// <summary>
+		/// Deletes the data.
+		/// </summary>
+		/// <returns></returns>
+		public ActionResult DeleteData()
+		{
+			CourseListingDataAccess dataAccess = new CourseListingDataAccess(RavenSession);
+
+			dataAccess.DeleteAllCourseData();
+
+			return RedirectToAction("Assignment5", "Assignments");
+		}
+
+		/// <summary>
+		/// APIs the help.
+		/// </summary>
+		/// <returns></returns>
+		public ActionResult ApiHelp()
+		{
+			return View("ApiHelp");
 		}
 
 		/// <summary>
@@ -339,5 +428,6 @@ namespace WebApp.Controllers
 
 			return response;
 		}
-    }
+	
+	}
 }
