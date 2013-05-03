@@ -14,6 +14,7 @@ namespace WebApp.Models.CourseListing
 			Dates = new List<string>();
 			Room = new List<string>();
 			Instructor = new List<string>();
+			AdditionalNotes = new List<string>();
 		}
 
 		public string Id { get; set; }
@@ -27,5 +28,6 @@ namespace WebApp.Models.CourseListing
 		public int Size { get; set; }
 		public int Enrolled { get; set; }
 		public string Status { get; set; }
+		public List<string> AdditionalNotes { get; set; }
 	}
 }

@@ -10,8 +10,7 @@ namespace WebApp.Models.CourseListing
 	{		
 		public Course()
 		{
-			Sections = new List<Section>();
-			AdditionalNotes = new List<string>();
+			Sections = new List<Section>();			
 		}
 
 		public string Id { get; set; }
@@ -28,8 +27,7 @@ namespace WebApp.Models.CourseListing
 		}
 
 		public string CourseName { get; set; }		
-		public string Credits { get; set; }
-		public List<string> AdditionalNotes { get; set; }
+		public string Credits { get; set; }		
 		public List<Section> Sections { get; set; }
 		public List<string> Prerequisites { get; set; }
 		public Rating CourseRating { get; set; }

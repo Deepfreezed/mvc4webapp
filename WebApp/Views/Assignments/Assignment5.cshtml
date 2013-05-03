@@ -26,31 +26,31 @@
         @Html.AntiForgeryToken()
 		@Html.ValidationSummary(true)
 
-        <fieldset style="padding-bottom:10px;">
+        <fieldset>
             <legend>Search MSU Courses (or use @Html.ActionLink("API", "ApiHelp"))</legend>
             <div class="control-group">
                 @Html.LabelFor(m => m.Semester, new { @class = "control-label" })
                 <div class="controls">
-                    @Html.DropDownListFor(m => m.Semester, Model.Semesters.ToSelectListItems(s => s.Name, s => s.Id, s => s.Id == Model.Semester, true, "", "SELECT SEMESTER"))
+                    @Html.DropDownListFor(m => m.Semester, Model.Semesters.ToSelectListItems(s => s.Name, s => s.Id, s => s.Id == Model.Semester, true, "", "SELECT SEMESTER"), new { @class = "input-large", style = "padding:1px 0 0 5px;" })
                     @Html.ValidationMessageFor(m => m.Semester)
                 </div>
             </div>
             <div class="control-group">
                 @Html.LabelFor(m => m.Department, new { @class = "control-label" })
                 <div class="controls">
-                    @Html.DropDownListFor(m => m.Department, Model.Departments.ToSelectListItems(d => d.Name, s => s.DepartmentID, s => s.DepartmentID == Model.Department, true, "", "SELECT DEPARTMENT"))
+                    @Html.DropDownListFor(m => m.Department, Model.Departments.ToSelectListItems(d => d.Name, s => s.DepartmentID, s => s.DepartmentID == Model.Department, true, "", "SELECT DEPARTMENT"), new { @class = "input-xlarge", style = "padding:1px 0 0 5px;" })
                     @Html.ValidationMessageFor(m => m.Department)
                 </div>
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="submit" class="btn btn-primary"><i class="icon-search icon-white"></i> Search</button>
                 </div>
             </div>
         </fieldset>
     }
 
-    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover" id="course_listing">
+    <table style="padding:1px 0 0 5px;"  cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover" id="course_listing">
         <thead>
 		    <tr>			
                 <th></th>        
@@ -64,13 +64,14 @@
                 <th>Size</th>
                 <th>Enrl</th>
                 <th>Status</th>
+                <th>Notes</th>
 		    </tr>
 	    </thead>
         <tbody>
             @foreach(Course course in Model.Courses)
             {
                 foreach(Section section in course.Sections)
-                { 
+                {                     
                     <tr>
                         <td>
                             <div class="alert alert-info" style="margin:0px;">
@@ -111,8 +112,27 @@
 			            <td>@Html.Raw(string.Join("<br/>", section.Instructor.ToArray()))</td>
                         <td>@Html.Raw(section.Size)</td>
                         <td>@Html.Raw(section.Enrolled)</td>
-                        <td>@Html.Raw(section.Status)</td>
-		            </tr>
+                        
+                        @*Status*@
+                        @if(section.Status.Equals("open", StringComparison.InvariantCultureIgnoreCase))
+                        { 
+                            <td style="text-align:center;"><small><span class="label label-success"><i class="icon-thumbs-up"></i>&nbsp;@Html.Raw(section.Status)</span></small></td>
+                        }
+                        else
+                        {
+                            <td style="text-align:center;"><small><span class="label label-important"><i class="icon-ban-circle"></i>&nbsp;@Html.Raw(section.Status)</span></small></td>
+                        } 
+
+                        @*AdditionalNotes*@
+                        @if(section.AdditionalNotes.Count > 0)
+                        { 
+                            <td><abbr title="@Html.Raw(string.Join("\n", section.AdditionalNotes.ToArray()))"><small>@Html.Raw(section.AdditionalNotes.Count) notes</small></abbr></td>
+                        }
+                        else
+                        {
+                            <td><small>none</small></td>
+                        }                        
+		            </tr>                    
                 }
             }
         </tbody>

@@ -267,7 +267,7 @@ namespace WebApp.Controllers
 			
 			//Populate the dropdowns
 			viewModel.Semesters = dataAccess.GetAllSemesters();
-			viewModel.Departments = dataAccess.GetAllDepartmentsBySemesterID(); //TODO: AJAX populate based off semester
+			viewModel.Departments = dataAccess.GetAllDepartmentsForCurrentSemester(); //TODO: AJAX populate based off semester
 
 			return View("Assignment5", viewModel);
 		}
@@ -285,7 +285,7 @@ namespace WebApp.Controllers
 
 			//Populate the dropdowns
 			viewModel.Semesters = dataAccess.GetAllSemesters();
-			viewModel.Departments = dataAccess.GetAllDepartmentsBySemesterID(); //TODO: AJAX populate based off semester
+			viewModel.Departments = dataAccess.GetAllDepartmentsForCurrentSemester(); //TODO: AJAX populate based off semester
 
 			if(!string.IsNullOrEmpty(viewModel.Semester) && !string.IsNullOrEmpty(viewModel.Department))
 			{
@@ -369,12 +369,32 @@ namespace WebApp.Controllers
 		/// <summary>
 		/// Reloads the data.
 		/// </summary>
+		/// <param name="semesterID">The semester ID.</param>
 		/// <returns></returns>
-		public ActionResult ReloadData()
+		public ActionResult ReloadData(string semesterID)
 		{
 			CourseListingDataAccess dataAccess = new CourseListingDataAccess(RavenSession);
 
-			dataAccess.LoadAllCourseDataToDatabase();
+			if(!string.IsNullOrEmpty(semesterID))
+			{
+				dataAccess.LoadSemesterToDatabase(semesterID);
+			}
+			else
+			{
+				dataAccess.LoadAllCourseDataToDatabase();
+			}			
+
+			return RedirectToAction("Assignment5", "Assignments");
+		}
+
+		/// <summary>
+		/// Refresh the stats.
+		/// </summary>
+		/// <returns></returns>
+		public ActionResult RefreshStats()
+		{
+			CourseListingDataAccess dataAccess = new CourseListingDataAccess(RavenSession);
+			dataAccess.PopulateHistoricalData();
 
 			return RedirectToAction("Assignment5", "Assignments");
 		}
