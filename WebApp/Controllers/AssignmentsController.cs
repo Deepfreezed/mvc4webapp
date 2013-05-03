@@ -371,7 +371,7 @@ namespace WebApp.Controllers
 		/// </summary>
 		/// <param name="semesterID">The semester ID.</param>
 		/// <returns></returns>
-		public ActionResult ReloadData(string semesterID)
+		public ActionResult LoadData(string semesterID)
 		{
 			CourseListingDataAccess dataAccess = new CourseListingDataAccess(RavenSession);
 
@@ -448,6 +448,5 @@ namespace WebApp.Controllers
 
 			return response;
 		}
-	
 	}
 }
