@@ -1,0 +1,48 @@
+﻿@using WebApp.Models.Mortgage;
+@model WebApp.ViewModels.MortgageCalculatorViewModel
+@{MortgageInformation mortgageInfo = Model.User.GetMortgageByName(Model.ShowMortgageID);}
+
+@if(Model != null && mortgageInfo != null)
+{
+    <div class="row">
+        <div class="span12">
+            <div class="alert alert-error">              
+              <h4 class="alert-heading">Original Payment Terms (@mortgageInfo.OrgLoanTerm Years)</h4>                         
+            </div>
+            <div style="padding-left:100px;">
+                <p>Mortgage payoff amount: <strong>@string.Format("{0:c}", @mortgageInfo.LoanAmount)</strong></p>
+                <p>Monthly principal and interest payment: <strong>@string.Format("{0:c}", @mortgageInfo.OriginalMonthlyPayment())</strong></p>
+                <p>Total interest payment: <strong>@string.Format("{0:c}", @mortgageInfo.OriginalInterestPayment())</strong></p>
+            </div>
+        </div>
+    </div>
+    if(@mortgageInfo.TargetLoanTerm > 0)
+    {
+        <div class="row">
+            <div class="span12">
+                <div class="alert alert-success">
+                  <h4 class="alert-heading">Target Pay Off Goal (@mortgageInfo.TargetLoanTerm Years)</h4>                                
+                </div>
+                <div style="padding-left:100px;">
+                    <p>Extra monthly payment: <strong>@string.Format("{0:c}", @mortgageInfo.TargetAdditionalPayment())</strong></p>
+                    <p>Total monthly payment: <strong>@string.Format("{0:c}", @mortgageInfo.TargetMonthlyPayment())</strong></p>
+                    <p>Total interest savings: <strong>@string.Format("{0:c}", @mortgageInfo.TargetInterestSaving())</strong></p>
+                </div>               
+            </div>
+        </div>
+    }
+    if(@mortgageInfo.ExtraMonthlyPayment > 0)
+    {
+        <div class="row">
+            <div class="span12">
+                <div class="alert alert-info">                  
+                  <h4 class="alert-heading">Extra payments (@string.Format("{0:c}", @mortgageInfo.ExtraMonthlyPayment) per Month)</h4>                                
+                </div>
+                <div style="padding-left:100px;">
+                    <p>Payoff early by: <strong>@mortgageInfo.ExtraPaymentMonthsSaved()</strong> Months</p>
+                    <p>Total interest savings: <strong>@string.Format("{0:c}", @mortgageInfo.ExtraPaymentInterestSaved())</strong></p>
+                </div>                
+            </div>            
+        </div>
+    }
+}

@@ -9,6 +9,7 @@ using WebApp.ViewModels;
 using Omu.ValueInjecter;
 using WebApp.Models.CourseListing;
 using Raven.Imports.Newtonsoft.Json;
+using WebApp.Models.Mortgage;
 
 namespace WebApp.Controllers
 {
@@ -255,7 +256,8 @@ namespace WebApp.Controllers
 
 			return View("Assignment4", model);
 		}
-		
+
+		#region Assignment 5
 		/// <summary>
 		/// Assignment5s this instance.
 		/// </summary>
@@ -377,10 +379,12 @@ namespace WebApp.Controllers
 
 			if(!string.IsNullOrEmpty(semesterID))
 			{
+				HttpContext.Server.ScriptTimeout = 600000;
 				dataAccess.LoadSemesterToDatabase(semesterID);
 			}
 			else
 			{
+				HttpContext.Server.ScriptTimeout = 6000000;
 				dataAccess.LoadAllCourseDataToDatabase();
 			}			
 
@@ -420,6 +424,146 @@ namespace WebApp.Controllers
 		{
 			return View("ApiHelp");
 		}
+		#endregion
+
+		/// <summary>
+		/// Mortgages the calculator.
+		/// </summary>
+		/// <returns></returns>
+		public ActionResult MortgageCalculator()
+		{
+			MortgageCalculatorDataAccess dataAccess = new MortgageCalculatorDataAccess(RavenSession);
+			MortgageUser mortgageUser = dataAccess.RetrieveFromSession();
+			MortgageCalculatorViewModel model = new MortgageCalculatorViewModel();
+			model.User = mortgageUser;
+
+			if(mortgageUser != null && !string.IsNullOrEmpty(mortgageUser.UserName) && mortgageUser.Mortgages.Count == 0)
+			{
+				model.Action = MortgagePageAction.CreateNewMortgage;
+			}
+			else if(mortgageUser != null && !string.IsNullOrEmpty(mortgageUser.UserName) && mortgageUser.Mortgages.Count > 0)
+			{
+				model.Action = MortgagePageAction.ShowUserMortgages;
+			}
+
+			return View("MortgageCalculator", model);
+		}	
+
+		/// <summary>
+		/// Mortgages the calculator.
+		/// </summary>
+		/// <returns></returns>
+		[HttpPost]
+		[AllowAnonymous]
+		public ActionResult MortgageCalculator(string action, string userlogin, string[] compareIDs, MortgageCalculatorViewModel model)
+		{
+			MortgageCalculatorDataAccess dataAccess = new MortgageCalculatorDataAccess(RavenSession);
+			MortgageUser mortgageUser = null;
+			MortgagePageAction actionPage = MortgagePageAction.ShowLogIn;
+			string value = string.Empty;
+
+			if(!string.IsNullOrEmpty(action) && action.Contains('_'))
+			{
+				string[] actionValue = action.Split('_');
+
+				action = actionValue[0];
+				value = actionValue[1];
+			}
+
+			switch(action)
+			{
+				case "getuser":
+					if(!string.IsNullOrEmpty(userlogin))
+					{
+						mortgageUser = dataAccess.GetUser(userlogin);
+
+						if(mortgageUser == null || string.IsNullOrEmpty(mortgageUser.Id) || string.IsNullOrEmpty(mortgageUser.UserName))
+						{
+							actionPage = MortgagePageAction.ShowNoUserFound;
+						}
+						else
+						{
+							dataAccess.CreateSessions(mortgageUser);
+							actionPage = MortgagePageAction.ShowUserMortgages;
+						}
+					}
+					break;
+				case "createuser":
+					actionPage = MortgagePageAction.CreateNewUser;
+					break;
+				case "saveuser":
+					mortgageUser = new MortgageUser();
+					mortgageUser.InjectFrom(model);
+					dataAccess.SaveUser(mortgageUser);
+					actionPage = MortgagePageAction.CreateNewMortgage;
+					break;
+				case "createmortgage":
+					mortgageUser = dataAccess.RetrieveFromSession();
+					actionPage = MortgagePageAction.CreateNewMortgage;
+					break;
+				case "savemortgage":
+					mortgageUser = dataAccess.RetrieveFromSession();				
+					MortgageInformation mortgageInfo = new MortgageInformation();
+					mortgageInfo.InjectFrom(model);
+					mortgageUser.Mortgages.Add(mortgageInfo);
+					dataAccess.SaveUser(mortgageUser);
+					actionPage = MortgagePageAction.ShowUserMortgages;
+					break;				
+				case "signout":
+					dataAccess.SignOutSession();
+					actionPage = MortgagePageAction.ShowLogIn;
+					mortgageUser = null;
+					Session.Abandon();
+					break;
+				case "deleteuser":
+					dataAccess.DeleteCurrentUser();
+					actionPage = MortgagePageAction.ShowLogIn;
+					mortgageUser = null;
+					break;
+				case "calculatemortgage":
+					mortgageUser = dataAccess.RetrieveFromSession();
+					if(!string.IsNullOrEmpty(value))
+					{
+						model.ShowMortgageID = value;
+						actionPage = MortgagePageAction.ShowMortgageCalculations;
+					}
+					break;
+				case "deletemortgage":
+					mortgageUser = dataAccess.RetrieveFromSession();
+					if(!string.IsNullOrEmpty(value))
+					{
+						MortgageInformation deletedMortgage = mortgageUser.GetMortgageByName(value);
+						mortgageUser.Mortgages.Remove(deletedMortgage);
+						dataAccess.SaveChanges();
+						actionPage = MortgagePageAction.ShowUserMortgages;
+					}
+					break;
+				case "amortizemortgage":
+					mortgageUser = dataAccess.RetrieveFromSession();
+					if(!string.IsNullOrEmpty(value))
+					{
+						model.ShowMortgageID = value;
+						actionPage = MortgagePageAction.ShowMortgageAmortization;
+					}
+					break;
+				case "comparemortgage":
+					mortgageUser = dataAccess.RetrieveFromSession();
+					if(compareIDs != null && compareIDs.Length > 0)
+					{
+						model.CompareMortgageIDs = compareIDs;
+						actionPage = MortgagePageAction.ShowMortgageCompare;
+					}
+					break;
+				default:
+					break;
+			}
+
+			model.Action = actionPage;
+			model.User = mortgageUser;
+
+			return View("MortgageCalculator", model);
+		}
+
 
 		/// <summary>
 		/// Assignment3s the make HTTP web request.

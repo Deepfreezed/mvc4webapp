@@ -1,0 +1,42 @@
+﻿@using WebApp.Models.Mortgage;
+@model WebApp.ViewModels.MortgageCalculatorViewModel
+
+<fieldset>
+    <legend>User Mortgages</legend>
+    <button type="submit" name="action" id="comparemortgage1" value="comparemortgage" class="btn btn-primary">Compare</button>
+    <table style="padding:1px 0 0 5px;"  cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover" id="mortgage_listing">
+        <thead>
+	        <tr>			
+                <th></th>
+                <th>Name</th>        
+		        <th>Loan</th>
+                <th>APR</th>
+		        <th>Org Term</th>
+                <th>Trg Term</th>
+                <th>Down Payment</th>
+                <th>Extra Monthly</th>
+                <th>Action <button type="submit" name="action" id="createmortgage" value="createmortgage" class="btn btn-link"><i class="icon-plus icon-white"></i> Create Mortgage</button></th>
+	        </tr>
+        </thead>
+        <tbody>
+            @foreach(MortgageInformation mortgageInfo in Model.User.Mortgages)
+            {
+                <tr>
+                    <td><input type="checkbox" name="compareIDs" value="@mortgageInfo.MortgageName"></td>
+                    <td>@mortgageInfo.MortgageName</td>
+                    <td>@string.Format("{0:c}", mortgageInfo.LoanAmount)</td>
+                    <td>@string.Format("{0:P1}", (mortgageInfo.AnnualInterestRate / 100))</td>
+                    <td>@mortgageInfo.OrgLoanTerm</td>
+                    <td>@mortgageInfo.TargetLoanTerm</td>
+                    <td>@string.Format("{0:c}", @mortgageInfo.DownPayment)</td>
+                    <td>@string.Format("{0:c}", @mortgageInfo.ExtraMonthlyPayment)</td>
+                    <td style="text-align:center;">
+                        <button type="submit" name="action" id="calculatemortgage_@mortgageInfo.MortgageName" value="calculatemortgage_@mortgageInfo.MortgageName" class="btn btn-mini btn-info"><i class="icon-question-sign icon-white"></i> Calculate</button>
+                        <button type="submit" name="action" id="amortizemortgage_@mortgageInfo.MortgageName" value="amortizemortgage_@mortgageInfo.MortgageName" class="btn btn-mini btn-warning"><i class="icon-list-alt icon-white"></i> Amortize</button>
+                        <button type="submit" name="action" id="deletemortgage_@mortgageInfo.MortgageName" value="deletemortgage_@mortgageInfo.MortgageName" class="btn btn btn-mini btn-danger"><i class="icon-remove-circle icon-white"></i> Delete</button>                    
+                    </td>
+                </tr>                
+            }
+        </tbody>
+    </table>
+</fieldset>

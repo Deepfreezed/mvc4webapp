@@ -157,6 +157,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AssignmentsController.cs" />
+    <Compile Include="Controllers\DataLoadController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LabsController.cs" />
     <Compile Include="Controllers\RavenController.cs" />
@@ -173,6 +174,7 @@
     <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Helpers\Lab4DataAccess.cs" />
     <Compile Include="Helpers\Lab5DataAccess.cs" />
+    <Compile Include="Helpers\MortgageCalculatorDataAccess.cs" />
     <Compile Include="Helpers\MvcJsonResult.cs" />
     <Compile Include="Helpers\MvcXmlResult.cs" />
     <Compile Include="Models\Assignment2\MathPractice.cs" />
@@ -183,6 +185,7 @@
     <Compile Include="Models\CourseListing\Section.cs" />
     <Compile Include="Models\CourseListing\Department.cs" />
     <Compile Include="Models\CourseListing\Semester.cs" />
+    <Compile Include="Models\Mortgage\MortgageUser.cs" />
     <Compile Include="Models\RestClientSettings.cs" />
     <Compile Include="ViewModels\Assignment2ViewModel.cs" />
     <Compile Include="ViewModels\Assignment3ViewModel.cs" />
@@ -198,6 +201,7 @@
     <Compile Include="Tasks\TaskExecutor.cs" />
     <Compile Include="ViewModels\Lab5ViewModel.cs" />
     <Compile Include="ViewModels\Lab7ViewModel.cs" />
+    <Compile Include="ViewModels\MortgageCalculatorViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\academichonesty\academichonesty.css" />
@@ -396,6 +400,7 @@
     <Content Include="Scripts\custom\lab4-functions.js" />
     <Content Include="Scripts\custom\lab5-functions.js" />
     <Content Include="Scripts\custom\lab7-functions.js" />
+    <Content Include="Scripts\custom\mortgagecalculator_functions.js" />
     <Content Include="Scripts\DataTables-1.9.4\docs\media\js\doc.js" />
     <Content Include="Scripts\DataTables-1.9.4\docs\media\js\jquery.js" />
     <Content Include="Scripts\DataTables-1.9.4\docs\media\js\shBrushJScript.js" />
@@ -522,6 +527,13 @@
     <Content Include="Views\Assignments\Assignment4.cshtml" />
     <Content Include="Views\Assignments\Assignment5.cshtml" />
     <Content Include="Views\Assignments\ApiHelp.cshtml" />
+    <Content Include="Views\Assignments\MortgageCalculator.cshtml" />
+    <Content Include="Views\Assignments\_MortgageUserCreate.cshtml" />
+    <Content Include="Views\Assignments\_MortgageCreateNew.cshtml" />
+    <Content Include="Views\Assignments\_Mortgages.cshtml" />
+    <Content Include="Views\Assignments\_MortgageCalculations.cshtml" />
+    <Content Include="Views\Assignments\_MortgageAmortization.cshtml" />
+    <Content Include="Views\Assignments\_MortgageCompare.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

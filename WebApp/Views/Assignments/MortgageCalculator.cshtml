@@ -1,0 +1,92 @@
+﻿@using WebApp.Helpers
+@using WebApp.Models.CourseListing
+@using WebApp.ViewModels;
+@model WebApp.ViewModels.MortgageCalculatorViewModel
+
+@{
+    ViewBag.Title = "Mortgage Calculator";
+}
+
+@section styles{
+	@Styles.Render("~/Content/datatable")
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/dataTables")
+    @Scripts.Render("~/bundles/custom/mortgagecalculator")
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+<section>
+    @using(Html.BeginForm("MortgageCalculator", "Assignments", FormMethod.Post, new { Id = "MortgageCalculatorForm", @class = "form-horizontal" }))
+    {
+        @Html.AntiForgeryToken()
+		
+        <fieldset>
+            @if(Model != null && Model.User != null && !string.IsNullOrEmpty(Model.User.Id))
+            {
+                <legend>Logged in user</legend>
+                <div class="input-append">
+                    <label class="control-label" for="userlogin">User Logged In</label>
+                    <div class="controls">
+                        <input class="span2" id="userlogin" name="userlogin" type="text" placeholder="@Model.User.UserName" disabled>
+                        <button type="submit" name="action" id="signout" value="signout" class="btn btn-inverse cancel"><i class="icon-user icon-white"></i> Sign Out</button>
+                        <button type="submit" name="action" id="deleteuser" value="deleteuser" class="btn btn-danger cancel"><i class="icon-search icon-white"></i> Delete User</button>
+                    </div>
+                </div>
+            }
+            else
+            { 
+                <legend>Retrieve user information</legend>
+                <div class="input-append">
+                    <label class="control-label" for="userlogin">User LogIn</label>
+                    <div class="controls">
+                        <input class="span2" id="userlogin" name="userlogin" type="text">
+                        <button type="submit" name="action" id="getuser" value="getuser" class="btn btn-inverse cancel"><i class="icon-user icon-white"></i> Get User</button>
+                        <button type="submit" name="action" id="createuser" value="createuser" class="btn btn-success cancel"><i class="icon-plus-sign icon-white"></i> Create User</button>
+                    </div>
+                </div>
+            }            
+        </fieldset>
+        <br />
+        if(Model != null && Model.Action != null)
+        {
+            if(Model.Action == MortgagePageAction.ShowNoUserFound)
+            {                
+                <h4 class="text-center" style="color:Red;">No user found !!!</h4>
+            }
+            else if(Model.Action == MortgagePageAction.CreateNewUser)
+            {
+                @Html.Partial("_MortgageUserCreate", Model)
+            }
+            else if(Model.Action == MortgagePageAction.CreateNewMortgage)
+            {
+                @Html.Partial("_Mortgages", Model)
+                @Html.Partial("_MortgageCreateNew", Model)
+            }
+            else if(Model.Action == MortgagePageAction.ShowUserMortgages)
+            {
+                @Html.Partial("_Mortgages", Model)
+            }
+            else if(Model.Action == MortgagePageAction.ShowMortgageCalculations)
+            {
+                @Html.Partial("_Mortgages", Model)
+                @Html.Partial("_MortgageCalculations", Model);
+            }
+            else if(Model.Action == MortgagePageAction.ShowMortgageAmortization)
+            {
+                @Html.Partial("_Mortgages", Model)
+                @Html.Partial("_MortgageAmortization", Model);
+            }
+            else if(Model.Action == MortgagePageAction.ShowMortgageCompare)
+            {
+                @Html.Partial("_Mortgages", Model)
+                @Html.Partial("_MortgageCompare", Model);
+            }         
+        }     
+    }
+</section>

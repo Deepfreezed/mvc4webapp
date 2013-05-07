@@ -13,6 +13,7 @@ using Raven.Database.Server;
 using Raven.Bundles.CascadeDelete;
 using Raven.Abstractions.Indexing;
 using WebApp.Models.CourseListing;
+using WebApp.Models.Mortgage;
 
 namespace WebApp.Helpers
 {
@@ -139,4 +140,12 @@ namespace WebApp.Helpers
 			Map = courses => from course in courses select new { course.SemesterID, course.DepartmentID, course.CourseNumber };
 		}
 	}
+
+	public class MortgageUserIndex : AbstractIndexCreationTask<MortgageUser>
+	{
+		public MortgageUserIndex()
+		{
+			Map = mortgages => from mortgage in mortgages select new { mortgage.UserName };
+		}
+	}	
 }
