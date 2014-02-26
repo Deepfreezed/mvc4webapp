@@ -252,7 +252,7 @@ namespace WebApp.Controllers
 				dataAccess.PopulateHistoricalData();
 			}
 
-			model.Courses = dataAccess.GetCoursesBySemesterIDandDepartmentID("20143Fall 2013", "IT");
+			model.Courses = dataAccess.GetCoursesBySemesterIDandDepartmentID("Fall2013", "IT");
 
 			return View("Assignment4", model);
 		}
@@ -287,7 +287,7 @@ namespace WebApp.Controllers
 
 			//Populate the dropdowns
 			viewModel.Semesters = dataAccess.GetAllSemesters();
-			viewModel.Departments = dataAccess.GetAllDepartmentsForCurrentSemester(); //TODO: AJAX populate based off semester
+			viewModel.Departments = dataAccess.GetAllDepartmentsForCurrentSemester(); 
 
 			if(!string.IsNullOrEmpty(viewModel.Semester) && !string.IsNullOrEmpty(viewModel.Department))
 			{

@@ -24,13 +24,14 @@ namespace WebApp.Helpers
 			m_RavenSession = RavenSession;
 
 			//Current Semester
-			currentSemesterID = "20143Fall 2013";
+			currentSemesterID = "20151Summer 2014";
 
 			//Current year past semesters
-			currentSemesterIDs.Add("20141Summer 2013");
-			currentSemesterIDs.Add("20135Spring 2013");
+			currentSemesterIDs.Add("20145Spring 2014");
 
 			//Previous year archived Semesters
+			previousSemestersIDs.Add("20141Summer 2013");
+			previousSemestersIDs.Add("20135Spring 2013");
 			previousSemestersIDs.Add("20133Fall 2012");
 			previousSemestersIDs.Add("20131Summer 2012");
 			previousSemestersIDs.Add("20125Spring 2012");
