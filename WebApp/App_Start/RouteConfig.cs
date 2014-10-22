@@ -18,13 +18,13 @@ namespace WebApp
 			routes.MapRoute(
 				name: "Default",
 				url: "{controller}/{action}/{id}",
-				defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+				defaults: new { controller = "Home", action = "Resume", id = UrlParameter.Optional }
 			);
 
 			routes.MapRoute(
 				name: "CatchAll",
 				url: "{controller}/{action}/{*url}",
-				defaults: new { controller = "Home", action = "Index" }
+				defaults: new { controller = "Home", action = "Resume" }
 			);
 		}
 	}
