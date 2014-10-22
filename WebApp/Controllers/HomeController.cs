@@ -14,5 +14,12 @@ namespace WebApp.Controllers
         {
             return View();
         }
+
+		//
+		// POST: /Home/Resume
+		public ActionResult Resume()
+		{
+			return View();
+		}
     }
 }

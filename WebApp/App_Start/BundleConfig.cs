@@ -85,6 +85,11 @@ namespace WebApp
 						"~/Content/bootstrap-responsive.css",						
 						"~/Content/font-awesome.css"));
 
+			bundles.Add(new StyleBundle("~/Content/bootstrap.spacelab").Include(
+						"~/Content/bootstrap.spacelab.css",
+						"~/Content/bootstrap-responsive.css",
+						"~/Content/font-awesome.css"));
+
 			bundles.Add(new StyleBundle("~/Content/datatable").Include("~/Content/bootstrap-datatable.css"));
 		}
 	}
